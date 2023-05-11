@@ -1,12 +1,17 @@
 package com.dyna.model;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ExampleClassTest {
 
+    ExampleClass testObject;
+
     @Test
     void doSomething() {
+        testObject = new ExampleClass();
+        String result = testObject.doSomething();
+        Assertions.assertEquals("Halloo", result);
+
     }
 }
