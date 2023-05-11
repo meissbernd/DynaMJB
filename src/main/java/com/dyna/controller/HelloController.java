@@ -1,4 +1,4 @@
-package com.dyna.main;
+package com.dyna.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

@@ -6,4 +6,6 @@ module com.example.demo {
 
     opens com.dyna.main to javafx.fxml;
     exports com.dyna.main;
+    exports com.dyna.controller;
+    opens com.dyna.controller to javafx.fxml;
 }
