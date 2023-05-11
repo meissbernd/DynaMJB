@@ -4,6 +4,6 @@ module com.example.demo {
 
     requires org.controlsfx.controls;
 
-    opens com.dyna.demo to javafx.fxml;
-    exports com.dyna.demo;
+    opens com.dyna.main to javafx.fxml;
+    exports com.dyna.main;
 }
