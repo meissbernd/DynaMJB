@@ -1,7 +1,7 @@
-package com.example.dynamjb;
+package com.dynamjb;
 
-import com.example.dynamjb.controller.SceneManager;
-import com.example.dynamjb.ui.viewModel.MainViewModel;
+import com.dynamjb.controller.SceneManager;
+import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

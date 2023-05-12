@@ -1,15 +1,14 @@
-package com.example.dynamjb.ui.pane;
+package com.dynamjb.ui.pane;
 
-import com.example.dynamjb.DynaMJBApplication;
-import com.example.dynamjb.ui.gameobjects.Player;
-import com.example.dynamjb.ui.viewModel.MainViewModel;
+import com.dynamjb.DynaMJBApplication;
+import com.dynamjb.ui.gameobjects.Player;
+import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -18,10 +17,9 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Scale;
 
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static com.example.dynamjb.constants.GameConstants.TILE_SIZE;
+import static com.dynamjb.constants.GameConstants.TILE_SIZE;
 
 public class MainPane extends Pane {
     private static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
