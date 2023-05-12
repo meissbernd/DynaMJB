@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<HBox id="myHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #aa3344;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <StackPane prefHeight="272.0" prefWidth="363.0">
+         <HBox.margin>
+            <Insets bottom="64.0" left="64.0" right="64.0" top="64.0" />
+         </HBox.margin>
+      </StackPane>
+      <VBox prefHeight="400.0" prefWidth="332.0">
+         <children>
+            <AnchorPane prefHeight="132.0" prefWidth="221.0" style="-fx-background-color: #aaaaaa;">
+               <children>
+                  <Text layoutX="182.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.rightAnchor="14.28369140625" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="292.0" prefWidth="221.0" style="-fx-background-color: #3355aa;" />
+            <AnchorPane prefHeight="118.0" prefWidth="221.0" style="-fx-background-color: #aaaaaa;">
+               <children>
+                  <Text layoutX="182.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </children>
+</HBox>

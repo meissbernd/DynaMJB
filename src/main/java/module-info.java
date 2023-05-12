@@ -1,11 +1,9 @@
-module com.example.demo {
+module com.example.dynamjb {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.logging;
 
-    requires org.controlsfx.controls;
 
-    opens com.dyna.main to javafx.fxml;
-    exports com.dyna.main;
-    exports com.dyna.controller;
-    opens com.dyna.controller to javafx.fxml;
+    opens com.example.dynamjb to javafx.fxml;
+    exports com.example.dynamjb;
 }
