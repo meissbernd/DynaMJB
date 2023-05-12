@@ -1,4 +1,4 @@
-package com.example.dynamjb;
+package com.dynamjb;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

@@ -1,8 +1,8 @@
-package com.example.dynamjb.controller;
+package com.dynamjb.controller;
 
-import com.example.dynamjb.DynaMJBApplication;
-import com.example.dynamjb.ui.pane.MainPane;
-import com.example.dynamjb.ui.viewModel.MainViewModel;
+import com.dynamjb.DynaMJBApplication;
+import com.dynamjb.ui.pane.MainPane;
+import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-import static com.example.dynamjb.constants.GameConstants.*;
+import static com.dynamjb.constants.GameConstants.*;
 
 
 public class SceneManager {

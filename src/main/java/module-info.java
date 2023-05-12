@@ -4,6 +4,6 @@ module com.example.dynamjb {
     requires java.logging;
 
 
-    opens com.example.dynamjb to javafx.fxml;
-    exports com.example.dynamjb;
+    opens com.dynamjb to javafx.fxml;
+    exports com.dynamjb;
 }

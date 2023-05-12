@@ -1,6 +1,6 @@
-package com.example.dynamjb.ui.gameobjects;
+package com.dynamjb.ui.gameobjects;
 
-import com.example.dynamjb.ui.pane.MainPane;
+import com.dynamjb.ui.pane.MainPane;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -10,8 +10,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 
 import java.util.Objects;
-
-import static com.example.dynamjb.ui.pane.MainPane.loadTileset;
 
 public class Player {
     private int tileHeight;
@@ -46,7 +44,7 @@ public class Player {
             double startX,
             double startY) {
         playerPath = Objects.requireNonNull(MainPane.class.getResource(tilePath)).toString();
-        playerset = loadTileset(playerPath, tileWidth, tileHeight);
+        playerset = MainPane.loadTileset(playerPath, tileWidth, tileHeight);
         this.tileWidth = (int) (tileWidth * this.scale);
         this.tileHeight = (int) (tileHeight * this.scale);
         this.xMapOffset = mapStartX;

@@ -1,4 +1,4 @@
-package com.example.dynamjb.constants;
+package com.dynamjb.constants;
 
 public class GameConstants {
     public static final int TILE_SIZE = 16; // Size of each tile in pixels

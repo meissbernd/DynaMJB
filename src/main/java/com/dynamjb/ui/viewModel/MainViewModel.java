@@ -1,7 +1,7 @@
-package com.example.dynamjb.ui.viewModel;
+package com.dynamjb.ui.viewModel;
 
-import com.example.dynamjb.DynaMJBApplication;
-import com.example.dynamjb.ui.pane.MainPane;
+import com.dynamjb.DynaMJBApplication;
+import com.dynamjb.ui.pane.MainPane;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -10,9 +10,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.ImagePattern;
 import java.util.Objects;
 import java.util.logging.Logger;
-import static com.example.dynamjb.constants.GameConstants.FRAMES_PER_SECOND;
-import static com.example.dynamjb.constants.GameConstants.TILE_SIZE;
-import static com.example.dynamjb.ui.pane.MainPane.loadTileset;
+import static com.dynamjb.constants.GameConstants.FRAMES_PER_SECOND;
+import static com.dynamjb.constants.GameConstants.TILE_SIZE;
 
 public class MainViewModel {
     private static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
@@ -34,7 +33,7 @@ public class MainViewModel {
             {33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33},
     };
     static String tilePath = Objects.requireNonNull(MainPane.class.getResource("/gfx/tiles_16x16_21x22.png")).toString();
-    public static ImagePattern[] tileset = loadTileset(tilePath, TILE_SIZE, TILE_SIZE);
+    public static ImagePattern[] tileset = MainPane.loadTileset(tilePath, TILE_SIZE, TILE_SIZE);
 
     private static final long FRAME_TIME_NS = 1000000000L / FRAMES_PER_SECOND;
 
