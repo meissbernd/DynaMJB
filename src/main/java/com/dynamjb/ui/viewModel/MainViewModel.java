@@ -16,7 +16,7 @@ import static com.dynamjb.constants.GameConstants.TILE_SIZE;
 public class MainViewModel {
     private static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
 
-    public static final int[][] LABYRINTH = { // Sample labyrinth data
+    public  int[][] LABYRINTH = { // Sample labyrinth data
             {16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 18},
             {32, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 34},
             {48, 0, 1, 2, 1, 2, 1, 2, 1, 2, 1, 0, 1, 0, 50},

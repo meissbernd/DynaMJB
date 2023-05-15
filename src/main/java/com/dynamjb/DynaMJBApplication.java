@@ -23,13 +23,6 @@ public class DynaMJBApplication extends Application {
 
         SceneManager sceneManager = new SceneManager(primaryStage);
 
-//        MainScene scene = new MainScene();0ho w
-//        // Set the Scene on the Stage
-//        primaryStage.setScene(scene);
-//        primaryStage.setTitle("Labyrinth");
-//r
-//        // Show the Stage
-//        primaryStage.show();
     }
 
 

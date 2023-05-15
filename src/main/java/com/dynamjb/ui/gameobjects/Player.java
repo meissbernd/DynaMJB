@@ -11,20 +11,22 @@ import javafx.util.Duration;
 
 import java.util.Objects;
 
+import static com.dynamjb.constants.GameConstants.TILE_SIZE;
+
 public class Player {
-    private int tileHeight;
-    private int tileWidth;
-    private int yOffset = -28;
-    private int xOffset = -11;
-    //    private int yOffset = 0;
-//    private int xOffset = 0;
+    private double playerHeight;
+    private double playerWidth;
+
+    private double yOffset = 0;
+    private double xOffset = 0;
+
     private double xPosition = 0;
     private double yPosition = 0;
-    private double xMapOffset;
-    private double yMapOffset;
+    private double mapStartX;
+    private double mapStartY;
     private static final int ANIMATION_DURATION = 200; // milliseconds
-    public static double scale = 1;
-    private static double FACTOR = 0.8;
+    public double mapScale = 1;
+    private double factor = 0.8;
     private ImagePattern imagePattern;
     private ImageView imageView;
     private Timeline animationTimeline;
@@ -33,32 +35,32 @@ public class Player {
     static String playerPath;
     public static ImagePattern[] playerset;
     private static int[] goRight = {0, 1, 0, 2};
+    private static int[] testImage = {31};
     private int[] playerMoveState = goRight;
 
     public Player(
             String tilePath,
-            int tileWidth,
-            int tileHeight,
+            int playerWidth,
+            int playerHeight,
             double mapStartX,
             double mapStartY,
-            double startX,
-            double startY) {
+            double playerStartX,
+            double playerStartY) {
         playerPath = Objects.requireNonNull(MainPane.class.getResource(tilePath)).toString();
-        playerset = MainPane.loadTileset(playerPath, tileWidth, tileHeight);
-        this.tileWidth = (int) (tileWidth * this.scale);
-        this.tileHeight = (int) (tileHeight * this.scale);
-        this.xMapOffset = mapStartX;
-        this.yMapOffset = mapStartY;
-        this.xPosition = startX;
-        this.yPosition = startY;
-
-        // Initialize the image pattern with the first frame
-//        this.imagePattern = new ImagePattern(getImageTile(0));
+        playerset = MainPane.loadTileset(playerPath, playerWidth, playerHeight);
+        this.playerWidth = (int) (playerWidth);
+        this.playerHeight = (int) (playerHeight);
+        this.mapStartX = mapStartX;
+        this.mapStartY = mapStartY;
+        this.xPosition = playerStartX;
+        this.yPosition = playerStartY;
+        this.xOffset = (TILE_SIZE - playerWidth * this.factor) / 2;
+        this.yOffset = (TILE_SIZE - playerHeight * this.factor);
 
         // Create the image view with the initial image pattern
         this.imageView = new ImageView();
         this.imageView.setImage(playerset[0].getImage());
-        setPlayerPosition(this.scale);
+        setPlayerPosition();
         setPlayerSize();
 
 
@@ -75,7 +77,7 @@ public class Player {
             // Update the image pattern with the current frame
 //            this.imagePattern = new ImagePattern(getImageTile(this.currentFrame));
             this.imageView.setImage(playerset[playerMoveState[this.currentFrame]].getImage());
-            this.setPlayerPosition(scale);
+            this.setPlayerPosition();
 //            this.imageView.setImage(getImageTile(this.currentFrame));
         }));
         this.animationTimeline.setCycleCount(Timeline.INDEFINITE); // Repeat the animation indefinitely
@@ -86,9 +88,9 @@ public class Player {
     // Helper method to get a specific tile from the image tiles
     private Image getImageTile(int index) {
         Image imageTiles = new Image("path/to/image/tiles.png");
-        int x = index % 4 * tileWidth;
-        int y = index / 4 * tileHeight;
-        return new WritableImage(imageTiles.getPixelReader(), x, y, tileWidth, tileHeight);
+        int x = (int) (index / 4 * playerWidth);
+        int y = (int) (index / 4 * playerHeight);
+        return new WritableImage(imageTiles.getPixelReader(), x, y, (int)playerWidth, (int) playerHeight);
     }
 
     // Start the player's animation
@@ -107,42 +109,60 @@ public class Player {
     }
 
     public void calcScale(double scale) {
-        this.scale = scale * FACTOR;
+        this.mapScale = scale * factor;
 
     }
 
     public void setPlayerSize() {
-        this.imageView.setFitWidth(this.tileWidth * this.scale);
-        this.imageView.setFitHeight(this.tileHeight * this.scale);
+        this.imageView.setFitWidth(this.playerWidth * this.mapScale * factor);
+        this.imageView.setFitHeight(this.playerHeight * this.mapScale * factor);
     }
 
     // Start the player's animation
     public void setPlayerOffset(double mapStartX, double mapStartY, double scale) {
-        this.xMapOffset = mapStartX;
-        this.yMapOffset = mapStartY;
+        this.mapStartX = mapStartX;
+        this.mapStartY = mapStartY;
     }
 
-    public void setPlayerPosition(double mapScale) {
+    public void setPlayerPosition() {
 //        imageView.setTranslateX(xPosition + (xOffset + xMapOffset + tileWidth * 0.5)  * scale); // Set the x position to 50
 //        imageView.setTranslateY(yPosition + (yOffset + yMapOffset + tileHeight * 0.5) * scale); // Set the y position to 50
 
-        double mapPositionX = xMapOffset * mapScale
-                + tileWidth / 2 * mapScale
-                + this.xOffset * FACTOR * mapScale;
+        double mapPositionX =
+                mapStartX * mapScale
+                        + this.xPosition * TILE_SIZE * mapScale
+                        + this.xOffset * mapScale
+//                + TILE_SIZE * mapScale
+//                 + playerWidth / 2 * mapScale
+//                + this.xOffset * FACTOR * mapScale
+                ;
 
-        double mapPositionY = yMapOffset * mapScale
-                + tileHeight / 2 * mapScale
-                + this.yOffset * FACTOR * mapScale;
+
+//
+//        double ydiff = (mapStartY + this.yPosition * TILE_SIZE);
+//        ydiff =
+//                this.yOffset * factor;
+
+        double mapPositionY =
+                mapStartY * this.mapScale
+                        + this.yPosition * TILE_SIZE * this.mapScale
+                        + (this.yOffset * mapScale)
+
+//                + TILE_SIZE * mapScale
+
+//                + playerHeight / 2 * mapScale
+//                + this.yOffset * FACTOR * mapScale
+                ;
         imageView.setTranslateX(mapPositionX);
         imageView.setTranslateY(mapPositionY);
     }
 
     public void updateDimensions(double mapScale) {
-        calcScale(mapScale);
+//        calcScale(mapScale);
+        this.mapScale = mapScale;
         this.setPlayerSize();
-        this.setPlayerPosition(mapScale);
+        this.setPlayerPosition();
     }
-
 }
 
 enum PlayerMoveState {
