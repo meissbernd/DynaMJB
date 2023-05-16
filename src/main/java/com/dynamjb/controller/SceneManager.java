@@ -23,11 +23,15 @@ public class SceneManager {
 
     private final Stage stage;
     private final MainViewModel mainViewModel;
+    private final LabyrinthControllerImpl labyrinthController;
+
+
     Scene scene;
 
     public SceneManager(Stage stage) {
         this.stage = stage;
-        this.mainViewModel = new MainViewModel(); // Create the ViewModel instance
+        this.labyrinthController = new LabyrinthControllerImpl();
+        this.mainViewModel = new MainViewModel(this.labyrinthController); // Create the ViewModel instance
         setScene(SceneType.MAIN);
     }
 

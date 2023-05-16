@@ -7,14 +7,11 @@ import javafx.stage.Stage;
 
 public class DynaMJBApplication extends Application {
 
-    private MainViewModel viewModel;
+//    private MainViewModel viewModel;
 
-    public DynaMJBApplication() {
-        // code for default constructor
-    }
 
-    public DynaMJBApplication(MainViewModel viewModel){
-        this.viewModel = viewModel;
+    public DynaMJBApplication(){
+//        this.viewModel = viewModel;
     }
 
 
@@ -27,8 +24,8 @@ public class DynaMJBApplication extends Application {
 
 
     public static void main(String[] args) {
-        MainViewModel viewModel = new MainViewModel();
-        DynaMJBApplication app = new DynaMJBApplication(viewModel);
+//        MainViewModel viewModel = new MainViewModel();
+        DynaMJBApplication app = new DynaMJBApplication();
         app.launch(args);
     }
 

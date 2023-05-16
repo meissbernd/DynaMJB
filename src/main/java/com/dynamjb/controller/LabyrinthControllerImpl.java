@@ -1,26 +1,118 @@
 package com.dynamjb.controller;
 
+import com.dynamjb.ui.gameobjects.TileObject;
+import com.dynamjb.ui.pane.MainPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.ImagePattern;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.dynamjb.constants.GameConstants.*;
+
 public class LabyrinthControllerImpl implements LabyrinthController {
-    public  int[][] labyrinth = { // Sample labyrinth data
-            {16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 18},
-            {32, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 34},
-            {48, 0, 1, 2, 1, 2, 1, 2, 1, 2, 1, 0, 1, 0, 50},
-            {64, 2, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 66},
-            {32, 2, 1, 0, 1, 2, 1, 2, 1, 0, 1, 2, 1, 2, 34},
-            {32, 2, 0, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 34},
-            {32, 2, 1, 2, 1, 0, 1, 2, 1, 2, 1, 2, 1, 0, 34},
-            {32, 2, 0, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 34},
-            {48, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 50},
-            {64, 2, 1, 2, 1, 2, 1, 0, 1, 0, 1, 2, 1, 2, 66},
-            {32, 2, 2, 2, 2, 0, 0, 0, 2, 2, 2, 0, 2, 0, 34},
-            {32, 0, 1, 0, 1, 2, 1, 0, 1, 2, 1, 2, 1, 2, 34},
-            {32, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 34},
-            {33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33},
+    public int[][] labyrinth = { // Sample labyrinth data
+            {32, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 34},
+            {35, 2, 1, 0, 2, 1, 3, 2, 2, 2, 2, 0, 0, 2, 36},
+            {35, 0, 44, 2, 44, 5, 44, 2, 44, 3, 44, 4, 44, 5, 36},
+            {37, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 38},
+            {39, 2, 44, 2, 44, 2, 44, 2, 44, 0, 44, 2, 44, 2, 40},
+            {35, 2, 0, 0, 2, 2, 2, 2, 5, 2, 5, 3, 2, 2, 36},
+            {35, 2, 44, 2, 44, 2, 44, 2, 44, 2, 44, 2, 44, 0, 36},
+            {35, 2, 0, 2, 3, 2, 2, 4, 4, 2, 2, 2, 2, 1, 36},
+            {35, 2, 44, 2, 44, 2, 44, 5, 44, 2, 44, 3, 44, 2, 36},
+            {37, 2, 4, 2, 2, 5, 1, 5, 1, 3, 2, 2, 1, 2, 38},
+            {39, 2, 44, 2, 44, 0, 44, 0, 44, 2, 44, 0, 44, 0, 40},
+            {35, 0, 1, 5, 5, 2, 1, 3, 3, 5, 1, 3, 3, 2, 36},
+            {43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43},
     };
+    List<TileObject>[][] stackedLabyrinth;
+    static String tilePath = Objects.requireNonNull(MainPane.class.getResource(LABYRINTH_IMAGE)).toString();
+    public static ImagePattern[] labyrinthset;
+    static String playerPath = Objects.requireNonNull(MainPane.class.getResource(PLAYER_IMAGE)).toString();
+    public static ImagePattern[] playerset;
+
+
     public LabyrinthControllerImpl() {
+        labyrinthset = loadTileset(tilePath, TILE_SIZE, TILE_SIZE);
+        playerset = loadTileset(playerPath, 24, 32);
+        createLabyrinth(labyrinth);
+        // Create block
+        addTileObjectToStackedLabyrinth(1,1, new TileObject(16));
+
+        // Create Booster and a Block above
+        addTileObjectToStackedLabyrinth(2,1, new TileObject(80));
+        addTileObjectToStackedLabyrinth(2,1, new TileObject(16));
+
+        // Create a Booster
+        addTileObjectToStackedLabyrinth(3,3, new TileObject(80));
+
+        // Create Booster
+        addTileObjectToStackedLabyrinth(5,5, new TileObject(96));
     }
+
     @Override
     public int[][] getLabyrinth() {
         return labyrinth;
+    }
+
+    @Override
+    public List<TileObject>[][] getStackedLabyrinth() {
+        return stackedLabyrinth;
+    }
+
+    @Override
+    public ImagePattern[] getPlayerSet() {
+        return playerset;
+    }
+
+    public ImagePattern[] getLabyrinthSet() {
+        return labyrinthset;
+    }
+
+    private void addTileObjectToStackedLabyrinth(int x, int y, TileObject tileObject){
+        this.stackedLabyrinth[y][x].add(tileObject);
+    }
+    private void createLabyrinth(int[][] labyrinth) {
+        int rows = labyrinth.length;
+        int columns = labyrinth[0].length;
+
+        List<TileObject>[][] stackedLabyrinth = new List[rows][columns];
+
+        // Initialize each element of the array with an empty list
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                stackedLabyrinth[i][j] = new ArrayList<>();
+
+                // TODO get more than one Image for Animation
+                int[] animationPattern = {labyrinth[i][j]};
+                TileObject newTileObject = new TileObject(animationPattern);
+                stackedLabyrinth[i][j].add(newTileObject);
+            }
+        }
+        this.stackedLabyrinth = stackedLabyrinth;
+    }
+
+    public static ImagePattern[] loadTileset(
+            String imagePath,
+            int tileWidth,
+            int tileHeight
+    ) {
+        Image image = new Image(imagePath);
+        int numTilesX = (int) image.getWidth() / tileWidth;
+        int numTilesY = (int) image.getHeight() / tileHeight;
+        ImagePattern[] tileset = new ImagePattern[numTilesX * numTilesY];
+
+        for (int y = 0; y < numTilesY; y++) {
+            for (int x = 0; x < numTilesX; x++) {
+                int startX = x * tileWidth;
+                int startY = y * tileHeight;
+                Image tileImage = new WritableImage(image.getPixelReader(), startX, startY, tileWidth, tileHeight);
+                tileset[y * numTilesX + x] = new ImagePattern(tileImage);
+            }
+        }
+        return tileset;
     }
 }
