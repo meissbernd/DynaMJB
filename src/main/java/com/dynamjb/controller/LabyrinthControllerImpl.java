@@ -1,5 +1,6 @@
 package com.dynamjb.controller;
 
+import com.dynamjb.ui.gameobjects.Player;
 import com.dynamjb.ui.gameobjects.TileObject;
 import com.dynamjb.ui.pane.MainPane;
 import javafx.scene.image.Image;
@@ -28,17 +29,22 @@ public class LabyrinthControllerImpl implements LabyrinthController {
             {35, 0, 1, 5, 5, 2, 1, 3, 3, 5, 1, 3, 3, 2, 36},
             {43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43},
     };
+    private double mapStartY =1* TILE_SIZE;
     List<TileObject>[][] stackedLabyrinth;
     static String tilePath = Objects.requireNonNull(MainPane.class.getResource(LABYRINTH_IMAGE)).toString();
     public static ImagePattern[] labyrinthset;
     static String playerPath = Objects.requireNonNull(MainPane.class.getResource(PLAYER_IMAGE)).toString();
     public static ImagePattern[] playerset;
+    public List<Player> players;
+    ImagePattern[] playerSet;
+
 
 
     public LabyrinthControllerImpl() {
         labyrinthset = loadTileset(tilePath, TILE_SIZE, TILE_SIZE);
         playerset = loadTileset(playerPath, 24, 32);
         createLabyrinth(labyrinth);
+
         // Create block
         addTileObjectToStackedLabyrinth(1,1, new TileObject(16));
 
@@ -51,6 +57,18 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
         // Create Booster
         addTileObjectToStackedLabyrinth(5,5, new TileObject(96));
+
+        players = new ArrayList<>();
+        Player player1 = new Player(24, 32, 1.5, 10, this);
+        Player player2 = new Player(24, 32, 4, 4, this);
+        players.add(player1);
+        players.add(player2);
+
+        this.playerSet = getPlayerSet();
+
+        setPlayerPos(players, 6,6, player1.getPlayerId());
+//        player1.setxPosition(8);
+//        player1.setyPosition(8);
     }
 
     @Override
@@ -114,5 +132,26 @@ public class LabyrinthControllerImpl implements LabyrinthController {
             }
         }
         return tileset;
+    }
+    public double getMapStartX() {
+        double mapStartX = 1 * TILE_SIZE;
+        return mapStartX;
+    }
+
+    public double getMapStartY() {
+        return mapStartY;
+    }
+    public List<Player> getPlayers(){
+        return this.players;
+    }
+    public void setPlayerPos(List<Player> players, double x, double y, long id) {
+        for (Player player : players) {
+            if (player.getPlayerId() == id) {
+                player.setxPosition(x);
+                player.setyPosition(y);
+                player.setPlayerPosition();
+                break;
+            }
+        }
     }
 }

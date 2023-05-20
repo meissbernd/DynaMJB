@@ -69,11 +69,13 @@ public class MainPane extends Pane {
 
         viewModel.rootHeightProperty().addListener((obs, oldVal, newVal) -> {
             calcScale(newVal.doubleValue());
+
             for (Player player : viewModel.players) {
                 player.updateDimensions(this.mapScale);
             }
         });
-        for (Player player : viewModel.players) {
+        List<Player> players = viewModel.getPlayers();
+        for (Player player : players) {
             stackPane.getChildren().add(player.getImageView());
         }
 

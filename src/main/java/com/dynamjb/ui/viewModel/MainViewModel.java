@@ -32,35 +32,20 @@ public class MainViewModel {
 
     public List<Player> players;
     private static final long FRAME_TIME_NS = 1000000000L / FRAMES_PER_SECOND;
-    private LabyrinthControllerImpl labyrinthController;
+    private LabyrinthControllerImpl controller;
     private AnimationTimer gameLoop;
     private boolean isRunning = false;
     ImagePattern[] playerSet;
     ImagePattern[] labyrinthSet;
+
     public MainViewModel(LabyrinthControllerImpl labyrinthController) {
-        this.labyrinthController = labyrinthController;
-        this.labyrinth = labyrinthController.getLabyrinth();
-         this.playerSet = labyrinthController.getPlayerSet();
-         this.labyrinthSet = labyrinthController.getLabyrinthSet();
+        this.controller = labyrinthController;
 
-        players = new ArrayList<>();
+        this.labyrinthSet = controller.getLabyrinthSet();
+        this.labyrinth = this.controller.getLabyrinth();
 
-        players.add(new Player(
-                "/gfx/bomberman1.png",
-                24,
-                32,
-                1.5,
-                10,
-                this
-        ));
-        players.add(new Player(
-                "/gfx/bomberman1.png",
-                24,
-                32,
-                5,
-                2,
-                this
-        ));
+        this.playerSet = controller.getPlayerSet();
+        this.players = controller.getPlayers();
     }
 
     public void onEvent(TileObjectEvent event, int id) {
@@ -71,15 +56,19 @@ public class MainViewModel {
                 break;
         }
     }
+
     public List<TileObject>[][] getStackedLabyrinth() {
-        return labyrinthController.getStackedLabyrinth();
+        return controller.getStackedLabyrinth();
     }
 
-public ImagePattern[] getPlayerSet(){
+    public ImagePattern[] getPlayerSet() {
         return this.playerSet;
-}public ImagePattern[] getLabyrinthSet(){
-        return labyrinthController.getLabyrinthSet();
-}
+    }
+
+    public ImagePattern[] getLabyrinthSet() {
+        return controller.getLabyrinthSet();
+    }
+
     //    public TileObject[] createTileObjectMap(){
 //        List<?>[][] tileObjectMap = new Array[LABYRINTH.length][LABYRINTH[0].length];
 //    }
@@ -113,6 +102,10 @@ public ImagePattern[] getPlayerSet(){
             gameLoop.stop();
         }
         isRunning = false;
+    }
+    public List<Player> getPlayers() {
+        this.players = controller.getPlayers();
+        return this.players;
     }
 
     public boolean isRunning() {

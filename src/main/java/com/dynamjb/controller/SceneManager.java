@@ -15,16 +15,10 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 import static com.dynamjb.constants.GameConstants.*;
-
-
 public class SceneManager {
-    private static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
-
-
     private final Stage stage;
     private final MainViewModel mainViewModel;
     private final LabyrinthControllerImpl labyrinthController;
-
 
     Scene scene;
 
@@ -51,7 +45,7 @@ public class SceneManager {
 
     protected Scene getMainScene() {
 
-        // Create a new Image object with the path to your image file
+        // Create a new Image object with the path to image file
         String backgroundPath = Objects.requireNonNull(getClass().getResource(BACKGROUND_IMAGE)).toString();
         Image backgroundImage = new Image(backgroundPath);
 
@@ -96,7 +90,6 @@ public class SceneManager {
         player2Label.setPrefWidth(100.0);
         player2Label.setPrefHeight(20);
 
-
         anchorPaneTop.getChildren().add(addFramesCounter());
 
         root.setTop(anchorPaneTop);
@@ -112,7 +105,6 @@ public class SceneManager {
         String cssPath = Objects.requireNonNull(getClass().getResource("/css/styles.css")).toExternalForm();
         scene.getStylesheets().add(cssPath);
         scene.setUserData(mainPane); // Store a reference to the MainPane instance in the Scene's user data
-
 
         return scene;
     }
@@ -146,10 +138,6 @@ public class SceneManager {
         fpsTimer.start();
         return fpsLabel;
     }
-
-
-// Start the FPS timer
-
 }
 
 enum SceneType {
