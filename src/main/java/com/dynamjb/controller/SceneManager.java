@@ -4,9 +4,11 @@ import com.dynamjb.DynaMJBApplication;
 import com.dynamjb.ui.pane.MainPane;
 import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.animation.AnimationTimer;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -113,6 +115,18 @@ public class SceneManager {
         scene.getStylesheets().add(cssPath);
         scene.setUserData(mainPane); // Store a reference to the MainPane instance in the Scene's user data
 
+        // Read key events
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                switch (keyEvent.getCode()){
+                    case UP:  System.out.println("up"); break;
+                    case DOWN: System.out.println("down"); break;
+                    case LEFT: System.out.println("left"); break;
+                    case RIGHT: System.out.println("right"); break;
+                }
+            }
+        });
 
         return scene;
     }
