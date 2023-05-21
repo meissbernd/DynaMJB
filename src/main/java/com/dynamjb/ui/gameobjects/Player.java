@@ -102,6 +102,13 @@ public class Player extends Node {
         startAnimation();
     }
 
+    public double getXPosition(){
+        return this.xPosition;
+    }
+
+    public void setXPosition(double xPosition){
+        this.xPosition = xPosition;
+    }
 
     // Helper method to get a specific tile from the image tiles
     private Image getImageTile(int index) {

@@ -1,6 +1,7 @@
 package com.dynamjb.controller;
 
 import com.dynamjb.DynaMJBApplication;
+import com.dynamjb.ui.gameobjects.Player;
 import com.dynamjb.ui.pane.MainPane;
 import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.animation.AnimationTimer;
@@ -122,7 +123,12 @@ public class SceneManager {
                 switch (keyEvent.getCode()){
                     case UP:  System.out.println("up"); break;
                     case DOWN: System.out.println("down"); break;
-                    case LEFT: System.out.println("left"); break;
+                    case LEFT:
+                        Player player1 = mainViewModel.players.get(0);
+                        System.out.println("left x: " + player1.getXPosition());
+                        player1.setXPosition(player1.getXPosition()-0.5);
+                        System.out.println("left new x: " + player1.getXPosition());
+                        break;
                     case RIGHT: System.out.println("right"); break;
                 }
             }
