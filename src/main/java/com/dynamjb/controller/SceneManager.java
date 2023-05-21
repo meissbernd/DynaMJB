@@ -1,12 +1,15 @@
 package com.dynamjb.controller;
 
 import com.dynamjb.DynaMJBApplication;
+import com.dynamjb.ui.gameobjects.Player;
 import com.dynamjb.ui.pane.MainPane;
 import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.animation.AnimationTimer;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -25,13 +28,21 @@ public class SceneManager {
     private final MainViewModel mainViewModel;
     private final LabyrinthControllerImpl labyrinthController;
 
+    private final KeyEventManager keyEventManager;
 
+    private final Player player1;
+    private final Player player2;
     Scene scene;
 
     public SceneManager(Stage stage) {
         this.stage = stage;
         this.labyrinthController = new LabyrinthControllerImpl();
         this.mainViewModel = new MainViewModel(this.labyrinthController); // Create the ViewModel instance
+
+        this.player1 = mainViewModel.players.get(0);
+        this.player2 = mainViewModel.players.get(1);
+        this.keyEventManager = new KeyEventManager(this.player1, this.player2);
+
         setScene(SceneType.MAIN);
     }
 
@@ -113,6 +124,13 @@ public class SceneManager {
         scene.getStylesheets().add(cssPath);
         scene.setUserData(mainPane); // Store a reference to the MainPane instance in the Scene's user data
 
+        // Pass key events to keyEventManager class
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                keyEventManager.handle(keyEvent);
+            }
+        });
 
         return scene;
     }
