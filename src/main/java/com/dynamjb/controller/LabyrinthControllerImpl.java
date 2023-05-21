@@ -68,7 +68,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
                 setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
 
             }
-        }, 4000); //  (3 seconds)
+        }, 4000); //  (4 seconds)
     }
 
     private void createStackedLabyrinth() {

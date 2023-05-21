@@ -6,12 +6,12 @@ import javafx.stage.Stage;
 
 public class DynaMJBApplication extends Application {
 
-    public DynaMJBApplication(){
+    public DynaMJBApplication() {
     }
 
     @Override
     public void start(Stage primaryStage) {
-        SceneManager sceneManager = new SceneManager(primaryStage);
+        SceneManager scenreManager = new SceneManager(primaryStage);
     }
 
     public static void main(String[] args) {
