@@ -28,13 +28,21 @@ public class SceneManager {
     private final MainViewModel mainViewModel;
     private final LabyrinthControllerImpl labyrinthController;
 
+    private final KeyEventManager keyEventManager;
 
+    private final Player player1;
+    private final Player player2;
     Scene scene;
 
     public SceneManager(Stage stage) {
         this.stage = stage;
         this.labyrinthController = new LabyrinthControllerImpl();
         this.mainViewModel = new MainViewModel(this.labyrinthController); // Create the ViewModel instance
+
+        this.player1 = mainViewModel.players.get(0);
+        this.player2 = mainViewModel.players.get(1);
+        this.keyEventManager = new KeyEventManager(this.player1, this.player2);
+
         setScene(SceneType.MAIN);
     }
 
@@ -116,21 +124,11 @@ public class SceneManager {
         scene.getStylesheets().add(cssPath);
         scene.setUserData(mainPane); // Store a reference to the MainPane instance in the Scene's user data
 
-        // Read key events
+        // Pass key events to keyEventManager class
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
-                switch (keyEvent.getCode()){
-                    case UP:  System.out.println("up"); break;
-                    case DOWN: System.out.println("down"); break;
-                    case LEFT:
-                        Player player1 = mainViewModel.players.get(0);
-                        System.out.println("left x: " + player1.getXPosition());
-                        player1.setXPosition(player1.getXPosition()-0.5);
-                        System.out.println("left new x: " + player1.getXPosition());
-                        break;
-                    case RIGHT: System.out.println("right"); break;
-                }
+                keyEventManager.handle(keyEvent);
             }
         });
 

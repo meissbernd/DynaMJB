@@ -106,9 +106,18 @@ public class Player extends Node {
         return this.xPosition;
     }
 
+    public double getYPosition(){
+        return this.yPosition;
+    }
+
     public void setXPosition(double xPosition){
         this.xPosition = xPosition;
     }
+
+    public void setYPosition(double yPosition){
+        this.yPosition = yPosition;
+    }
+
 
     // Helper method to get a specific tile from the image tiles
     private Image getImageTile(int index) {
