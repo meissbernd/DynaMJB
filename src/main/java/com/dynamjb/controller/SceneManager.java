@@ -1,6 +1,5 @@
 package com.dynamjb.controller;
 
-import com.dynamjb.DynaMJBApplication;
 import com.dynamjb.ui.pane.MainPane;
 import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.animation.AnimationTimer;
@@ -10,9 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import static com.dynamjb.constants.GameConstants.*;
 public class SceneManager {
@@ -26,6 +23,8 @@ public class SceneManager {
         this.stage = stage;
         this.labyrinthController = new LabyrinthControllerImpl();
         this.mainViewModel = new MainViewModel(this.labyrinthController); // Create the ViewModel instance
+
+        // Start Scene
         setScene(SceneType.MAIN);
     }
 
@@ -42,7 +41,13 @@ public class SceneManager {
         stage.setScene(scene);
         stage.show();
     }
-
+    /**
+     * Returns the main Scene for the application.
+     * contains a BorderPane layout with AnchorPane regions and a MainPane.
+     * sets up the background image, labels, ...
+     * styled with CSS using the "styles.css" file.
+     * @return The main Scene of the application.
+     */
     protected Scene getMainScene() {
 
         // Create a new Image object with the path to image file
@@ -123,7 +128,6 @@ public class SceneManager {
                     lastTime = now;
                     return;
                 }
-
                 frameCount++;
 
                 long elapsedNanos = now - lastTime;

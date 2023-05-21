@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LabyrinthController {
 
-    int[][] getLabyrinth();
+//    int[][] getLabyrinth();
     List<TileObject>[][] getStackedLabyrinth();
 
     ImagePattern[] getPlayerSet();

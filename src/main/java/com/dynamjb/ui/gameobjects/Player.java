@@ -29,9 +29,15 @@ public class Player extends Node {
     private int currentFrame = 0;
     private LabyrinthControllerImpl controller;
     public static ImagePattern[] playerset;
-    private static final int[] goRight = {0, 1, 0, 2};
-    private static final int[] testImage = {31};
-    private int[] playerMoveState = goRight;
+    public static final int[] GO_RIGHT = {0, 1, 0, 2};
+    public static final int[] GO_UP = {16, 17, 16, 18};
+    public static final int[] GO_DOWN = {8, 9, 8, 9};
+    public static final int[] STOP_RIGHT = {0};
+    public static final int[] STOP_UP = {16};
+    public static final int[] STOP_DOWN = {8};
+    public static final int[] STOP_LEFT = {63};
+    public static final int[] GO_LEFT = {63, 62, 63, 61};
+    private int[] playerMoveState = STOP_DOWN;
 
     public Player(int width, int height, double xPos, double yPos, LabyrinthControllerImpl controller
     ) {
@@ -50,10 +56,8 @@ public class Player extends Node {
         setPlayerPosition();
         setPlayerSize();
 
-
         // Create the animation timeline to change the player's image over time
         this.animationTimeline = new Timeline(new KeyFrame(Duration.millis(ANIMATION_DURATION), event -> {
-            // Increment the current frame
             this.currentFrame++;
 
             // Reset the current frame to 0 if it exceeds the total number of frames
@@ -112,8 +116,8 @@ public class Player extends Node {
 
     public void updateDimensions(double mapScale) {
         this.mapScale = mapScale;
-        this.setPlayerSize();
-        this.setPlayerPosition();
+        setPlayerSize();
+        setPlayerPosition();
     }
 
     public double getxPosition() {
@@ -135,8 +139,13 @@ public class Player extends Node {
     public long getPlayerId() {
         return id;
     }
+
+    public int[] getPlayerMoveState() {
+        return playerMoveState;
+    }
+
+    public void setPlayerMoveState(int[] playerMoveState) {
+        this.playerMoveState = playerMoveState;
+    }
 }
 
-enum PlayerMoveState {
-    RIGHT, LEFT, UP, DOWN
-}
