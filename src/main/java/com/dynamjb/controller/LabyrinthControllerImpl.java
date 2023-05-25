@@ -1,8 +1,7 @@
 package com.dynamjb.controller;
 
 import com.dynamjb.DynaMJBApplication;
-import com.dynamjb.ui.gameobjects.Player;
-import com.dynamjb.ui.gameobjects.TileObject;
+import com.dynamjb.ui.gameobjects.*;
 import com.dynamjb.ui.pane.MainPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -39,7 +38,6 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     int minY;
     int maxY;
 
-
     // Offsets of solid Tiles
     private int[] solidTiles = {44};
     static String tilePath = Objects.requireNonNull(MainPane.class.getResource(LABYRINTH_IMAGE)).toString();
@@ -75,7 +73,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
                 setPlayerPos(players, 7, 7, player1.getPlayerId());
                 setPlayerMoveState(players, Player.GO_LEFT, player1.getPlayerId());
                 setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
-                setBomb(11,3,0,2);
+                setBomb(11, 3, 0, 2);
             }
         }, 3000); //  (4 seconds)
 
@@ -84,29 +82,22 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     private void createStackedLabyrinth() {
         createLabyrinth(labyrinth, solidTiles);
 
-        // Create blocks
-        setDestructableBlock(1, 1);
-        setDestructableBlock(4, 3);
-        setDestructableBlock(2, 5);
-        setDestructableBlock(4, 7);
-        setDestructableBlock(8, 7);
-        setDestructableBlock(11, 5);
-        setDestructableBlock(9, 3);
+        setBlock(4, 3);
+        setBlock(2, 5);
+        setBlock(4, 7);
+        setBlock(8, 7);
+        setBlock(11, 5);
+        setBlock(9, 3);
 
-        // set bombs
         setBomb(3, 9, 0, 3);
         setBomb(9, 8, 1, 5);
 
-        addTileObjectToStackedLabyrinth(11, 10, new TileObject(new int[]{128, 129}, this));
-        // Create a Booster and animated block
-        addTileObjectToStackedLabyrinth(8, 7, new TileObject(new int[]{136, 137}, this));
-        // Create Booster
-        addTileObjectToStackedLabyrinth(10, 1, new TileObject(16, true, this));
-        // Create a Booster
-        addTileObjectToStackedLabyrinth(3, 3, new TileObject(new int[]{120, 121}, this));
-        // Create Booster
-        addTileObjectToStackedLabyrinth(5, 5, new TileObject(new int[]{134, 135}, this));
-
+        setBoosterBombCount(1, 1);
+        setBoosterSpeed(2, 1);
+        setBoosterInvincible(3,1);
+        setBoosterLife(4, 1);
+        setBoosterBombStrength(5,1);
+        setBoosterPhasing(6,7);
     }
 
     private boolean inLabyrinth(int x, int y) {
@@ -115,18 +106,13 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
 
     protected boolean setFlame(long playerId, int x, int y, int[] animationPattern) {
-        TileObject newTileObject = new TileObject(
-                animationPattern,
-                TileObject.AnimationFinishEvent.DESTROY,
-                true,
-                this);
-        boolean success = addTileObjectToStackedLabyrinth(x, y, newTileObject);
+        Flame flame = new Flame(playerId, animationPattern, this);
+        boolean success = addTileObjectToStackedLabyrinth(x, y, flame);
         if (!success) {
             long tileObjectId = isExplosive(x, y);
-            if (tileObjectId > 0) {
+            if (tileObjectId > -1) {
                 logger.log(Level.INFO, "bomb is exploded with id : " + tileObjectId);
                 explodeTileObject(tileObjectId);
-//                setFlames(playerId, explosiveStrength, x, y);
             } else {
                 startDestruction(x, y);
             }
@@ -185,7 +171,6 @@ public class LabyrinthControllerImpl implements LabyrinthController {
                 }
             }
         }
-
         for (int dy = 1; dy <= flameLength; dy++) {
             if (inLabyrinth(x, y + dy)) {
                 if (dy == flameLength) {
@@ -203,30 +188,40 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         return true;
     }
 
-    private void setDestructableBlock(int x, int y) {
-        TileObject block = new TileObject(new int[]{16, 17, 18, 19, 20, 21, 22},
-                TileObject.AnimationFinishEvent.DESTROY,
-                false,
-                this);
-        block.setDestructible(true);
-        block.setSolid(true);
+    private void setBlock(int x, int y) {
+        Block block = new Block(new int[]{16, 17, 18, 19, 20, 21, 22}, this);
         addTileObjectToStackedLabyrinth(x, y,
                 block);
     }
 
     private void setBomb(int x, int y, long ownerId, int strenght) {
-        TileObject bomb = new TileObject(
-                new int[]{112, 112, 113, 114,112,112,113,114,112,112,113,114},
-                TileObject.AnimationFinishEvent.EXPLODE,
-                true,
-                this);
-        bomb.setExplosive(true);
-        bomb.setSolid(true);
-        bomb.setOwnerId(ownerId);
-        bomb.setExplosiveStrength(strenght);
-        addTileObjectToStackedLabyrinth(x, y, bomb);
+        Bomb bomb = new Bomb(
+                ownerId,
+                strenght,
+                new int[]{112, 112, 113, 114, 112, 112, 113, 114, 112, 112, 113, 114},
+                this
+        );
+           addTileObjectToStackedLabyrinth(x, y, bomb);
     }
 
+    private void setBoosterBombCount(int x, int y) {
+        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{128, 129}, this));
+    }
+    private void setBoosterBombStrength(int x, int y) {
+        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{136, 137}, this));
+    }
+    private void setBoosterPhasing(int x, int y) {
+        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{138, 139}, this));
+    }
+    private void setBoosterSpeed(int x, int y) {
+        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{130, 131}, this));
+    }
+    private void setBoosterLife(int x, int y) {
+        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{134, 135}, this));
+    }
+    private void setBoosterInvincible(int x, int y) {
+        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{132, 133}, this));
+    }
     @Override
     public List<TileObject>[][] getStackedLabyrinth() {
         return stackedLabyrinth;
@@ -242,8 +237,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     }
 
     /**
-     * Adds a TileObject to the stacked labyrinth at coordinates (x, y) if the tile is not solid.
-     *
+     * Adds a TileObject to the stacked labyrinth at coordinates (x, y) if there is no solid tile.
      * @param x          The x-coordinate of the tile.
      * @param y          The y-coordinate of the tile.
      * @param tileObject The TileObject to add.
@@ -272,19 +266,24 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 //                int[] animationPattern = {labyrinth[i][j]};
                 int imageOffset = labyrinth[i][j];
 
-//                TileObject newTileObject = new TileObject(animationPattern,this);
-                TileObject newTileObject = new TileObject(imageOffset, this);
+                if (isTileSolid(imageOffset)) {
+                    stackedLabyrinth[i][j].add(new WallTile(imageOffset, this));
 
-                // make Tiles solid
-                for (int solidTile : solidTiles) {
-                    if (imageOffset == solidTile) {
-                        newTileObject.setSolid(true);
-                    }
+                } else {
+                    stackedLabyrinth[i][j].add(new GroundTile(imageOffset, this));
                 }
-                stackedLabyrinth[i][j].add(newTileObject);
             }
         }
         this.stackedLabyrinth = stackedLabyrinth;
+    }
+
+    private boolean isTileSolid(int imageOffset) {
+        for (int solidTile : solidTiles) {
+            if (imageOffset == solidTile) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setBorders(int offsetTop, int offsetRight, int offsetBottom, int offsetLeft) {
@@ -294,14 +293,12 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         this.minX = offsetLeft;
     }
 
-
     private TileObject getTileObjectById(long tileObjectId) {
         int rows = labyrinth.length;
         int columns = labyrinth[0].length;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 List<TileObject> tileObjects = stackedLabyrinth[i][j];
-
                 for (TileObject tileObject : tileObjects) {
                     if (tileObject.getId() == tileObjectId) {
                         return tileObject;
@@ -406,6 +403,11 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         }
     }
 
+    /**
+     * Checks if a tile at the coordinates (x, y) is destrutible and start the animation .
+     * @param x The x-coordinate of the tile.
+     * @param y The y-coordinate of the tile.
+     */
     public void startDestruction(int x, int y) {
         List<TileObject> tileObjects = stackedLabyrinth[y][x];
 
@@ -416,6 +418,12 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         }
     }
 
+    /**
+     * Checks if a tile at the coordinates (x, y) is solid .
+     * @param x The x-coordinate of the tile.
+     * @param y The y-coordinate of the tile.
+     * @return True if the tile is solid, false otherwise.
+     */
     public boolean isSolid(int x, int y) {
         List<TileObject> tileObjects = stackedLabyrinth[y][x];
 
@@ -427,9 +435,15 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         return false;
     }
 
+    /**
+     *  Checks if a tile at the coordinates (x, y) is explosive.
+     *  Returns the ID of the explosive object if found, or -1 if no explosive object is present.
+     *  @param x The x-coordinate of the tile.
+     *  @param y The y-coordinate of the tile.
+     *  @return The ID of the explosive object, or -1 if no explosive object is present.
+     */
     public long isExplosive(int x, int y) {
         List<TileObject> tileObjects = stackedLabyrinth[y][x];
-
         for (TileObject tileObject : tileObjects) {
             if (tileObject.isExplosive()) {
                 return tileObject.getId();
@@ -438,6 +452,12 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         return -1;
     }
 
+    /**
+     * Handles the event when an animation finishes for a specific tile object.
+     * Performs actions based on the provided AnimationFinishEvent.
+     * @param id The ID of the tile object.
+     * @param animationFinishEvent The type of animation finish event.
+     */
     public void animationFinished(long id, TileObject.AnimationFinishEvent animationFinishEvent) {
         switch (animationFinishEvent) {
             case DESTROY:
@@ -449,7 +469,5 @@ public class LabyrinthControllerImpl implements LabyrinthController {
             default:
                 logger.log(Level.INFO, "Tile with id : " + id + " " + animationFinishEvent.toString());
         }
-
-
     }
 }

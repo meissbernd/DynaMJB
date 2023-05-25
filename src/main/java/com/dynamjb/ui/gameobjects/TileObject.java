@@ -18,57 +18,26 @@ public class TileObject {
     private static final int ANIMATION_DURATION = 200; // milliseconds
     private int currentFrame = 0;
 
-
-
-    private long ownerId = -1;
+    private int[] animationPattern;
+    private boolean solid = false;
+    private AnimationFinishEvent animationFinishEvent = AnimationFinishEvent.DEFAULT;
+    public long getId() {
+        return id;
+    }
+    public void setSolid(boolean solid) {
+        this.solid = solid;
+    }
+    public boolean isSolid() {
+        return solid;
+    }
     public enum AnimationFinishEvent {
         NONE, DESTROY, EXPLODE;
         public static final AnimationFinishEvent DEFAULT = NONE;
     }
-
-    private boolean solid = false;
-    private boolean kills = false;
-    private boolean destructible = false;
-    private boolean explosive = false;
-    private int explosiveStrength = 1;
-
-    public AnimationFinishEvent getAnimationFinishEvent() {
-        return animationFinishEvent;
-    }
-
-    public void setAnimationFinishEvent(AnimationFinishEvent animationFinishEvent) {
-        this.animationFinishEvent = animationFinishEvent;
-    }
-
-    private AnimationFinishEvent animationFinishEvent = AnimationFinishEvent.DEFAULT;
-
-    public void setSolid(boolean solid) {
-        this.solid = solid;
-    }
-
-    public void setKills(boolean kills) {
-        this.kills = kills;
-    }
-
-    private int[] animationPattern;
-
-    public boolean isSolid() {
-        return solid;
-    }
-
-    public boolean isKills() {
-        return kills;
-    }
-
-    public int[] getAnimationPattern() {
-        return animationPattern;
-    }
-
     public int getCurrentImage() {
         return animationPattern[this.currentFrame];
     }
-
-    private void createAnimationTimeline() {
+    protected void createAnimationTimeline() {
         this.animationTimeline = new Timeline(new KeyFrame(Duration.millis(ANIMATION_DURATION), event -> {
             this.currentFrame++;
 
@@ -83,6 +52,43 @@ public class TileObject {
         }));
         this.animationTimeline.setCycleCount(Timeline.INDEFINITE); // Repeat the animation indefinitely
     }
+
+
+
+
+
+    private long ownerId = -1;
+    private boolean kills = false;
+    private boolean destructible = false;
+    private boolean explosive = false;
+    private int explosiveStrength = 1;
+
+    public AnimationFinishEvent getAnimationFinishEvent() {
+        return animationFinishEvent;
+    }
+
+    public void setAnimationFinishEvent(AnimationFinishEvent animationFinishEvent) {
+        this.animationFinishEvent = animationFinishEvent;
+    }
+
+
+    public void setKills(boolean kills) {
+        this.kills = kills;
+    }
+
+
+
+    public boolean isKills() {
+        return kills;
+    }
+
+    public int[] getAnimationPattern() {
+        return animationPattern;
+    }
+
+
+
+
 
     public TileObject(
             int[] animationPattern,
@@ -168,9 +174,7 @@ public class TileObject {
         this.explosiveStrength = explosiveStrength;
     }
 
-    public long getId() {
-        return id;
-    }
+
     public long getOwnerId() {
         return ownerId;
     }
