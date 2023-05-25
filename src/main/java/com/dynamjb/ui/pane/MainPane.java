@@ -153,7 +153,7 @@ public class MainPane extends Pane {
                 for (TileObject tileObject : tileObjects) {
 
                     gc.setFill(tileset[tileObject.getCurrentImage()]);
-                    gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE + 1, TILE_SIZE + 1);
+                    gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE + 0.3, TILE_SIZE + 0.3);
                 }
             }
         }
