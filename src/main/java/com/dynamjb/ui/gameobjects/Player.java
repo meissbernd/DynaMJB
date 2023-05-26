@@ -10,6 +10,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 
+import static com.dynamjb.constants.GameConstants.PLAYER_SPEED;
 import static com.dynamjb.constants.GameConstants.TILE_SIZE;
 
 public class Player extends Node {
@@ -22,10 +23,14 @@ public class Player extends Node {
     private double xPosition;
     private double yPosition;
     private static final int ANIMATION_DURATION = 200; // milliseconds
+    private static final int POSITION_UPDATE_DURATION = 16; // milliseconds
     public double mapScale = 1;
     private final double magnificationFactor = 0.8;
     private ImageView imageView;
     private Timeline animationTimeline;
+    private Timeline positionTimeline;
+    private double velocityX;
+    private double velocityY;
     private int currentFrame = 0;
     private LabyrinthControllerImpl controller;
     public static ImagePattern[] playerset;
@@ -38,6 +43,12 @@ public class Player extends Node {
     public static final int[] STOP_LEFT = {63};
     public static final int[] GO_LEFT = {63, 62, 63, 61};
     private int[] playerMoveState = STOP_DOWN;
+    private int bombCount = 1;
+    private int bombStrength = 1;
+    private double speed = PLAYER_SPEED;
+    private int life = 3;
+    private boolean invincible = false;
+    private boolean phasing = false;
 
     public Player(int width, int height, double xPos, double yPos, LabyrinthControllerImpl controller
     ) {
@@ -67,10 +78,18 @@ public class Player extends Node {
 
             // Update the image pattern with the current frame
             this.imageView.setImage(playerset[playerMoveState[this.currentFrame]].getImage());
-            this.setPlayerPosition();
+//            this.setPlayerPosition();
         }));
         this.animationTimeline.setCycleCount(Timeline.INDEFINITE); // Repeat the animation indefinitely
-        startAnimation();
+
+        // Create the animation timeline to change the player's image over time
+        this.positionTimeline = new Timeline(new KeyFrame(Duration.millis(POSITION_UPDATE_DURATION), event -> {
+            this.setPlayerPosition();
+        }));
+        this.positionTimeline.setCycleCount(Timeline.INDEFINITE); // Repeat the animation indefinitely
+
+        startAnimationTimeLine();
+        startPositionUpdateTimeLine();
     }
 
     // Helper method to get a specific tile from the image tiles
@@ -82,9 +101,13 @@ public class Player extends Node {
     }
 
     // Start the player's animation
-    public void startAnimation() {
+    public void startAnimationTimeLine() {
         this.animationTimeline.play();
     }
+    public void startPositionUpdateTimeLine() {
+        this.positionTimeline.play();
+    }
+
 
     // Stop the player's animation
     public void stopAnimation() {
@@ -120,19 +143,19 @@ public class Player extends Node {
         setPlayerPosition();
     }
 
-    public double getxPosition() {
+    public double getXPosition() {
         return xPosition;
     }
 
-    public void setxPosition(double xPosition) {
+    public void setXPosition(double xPosition) {
         this.xPosition = xPosition;
     }
 
-    public double getyPosition() {
+    public double getYPosition() {
         return yPosition;
     }
 
-    public void setyPosition(double yPosition) {
+    public void setYPosition(double yPosition) {
         this.yPosition = yPosition;
     }
 
@@ -146,6 +169,67 @@ public class Player extends Node {
 
     public void setPlayerMoveState(int[] playerMoveState) {
         this.playerMoveState = playerMoveState;
+    }
+    public int getBombCount() {
+        return bombCount;
+    }
+
+    public void setBombCount(int bombCount) {
+        this.bombCount = bombCount;
+    }
+
+    public int getBombStrength() {
+        return bombStrength;
+    }
+
+    public void setBombStrength(int bombStrength) {
+        this.bombStrength = bombStrength;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public boolean isInvincible() {
+        return invincible;
+    }
+
+    public void setInvincible(boolean invincible) {
+        this.invincible = invincible;
+    }
+
+    public boolean isPhasing() {
+        return phasing;
+    }
+
+    public void setPhasing(boolean phasing) {
+        this.phasing = phasing;
+    }
+    public double getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX * this.speed;
+    }
+    public double getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY * this.speed;
     }
 }
 

@@ -10,4 +10,5 @@ public class GameConstants {
     public static final int FRAMES_PER_SECOND = 50;
     public static final int TOP_PANE_HEIGHT = 64;
     public static final int BOTTOM_PANE_HEIGHT = 64;
+    public static final double PLAYER_SPEED = 0.08;
 }

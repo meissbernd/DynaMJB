@@ -5,6 +5,7 @@ import com.dynamjb.ui.gameobjects.*;
 import com.dynamjb.ui.pane.MainPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.ImagePattern;
 
 import java.util.*;
@@ -54,10 +55,32 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         playerset = loadTileset(playerPath, 24, 32);
         // Set Borders for FameClipping
         setBorders(1, 1, 1, 1);
-        createStackedLabyrinth();
         createPlayers();
+
+        createStackedLabyrinth();
     }
 
+    public Player getPlayer(int player){
+        return players.get(player);
+    }
+
+    public void doPlayers(){
+        for (Player player:players){
+            double x = player.getXPosition();
+            double y =player.getYPosition();
+            double velocitX = player.getVelocityX();
+            double velocitY = player.getVelocityY();
+
+            // Check Position in Map, Collision with Flames or Booster ...
+            x += velocitX;
+            y += velocitY;
+
+            player.setXPosition(x);
+            player.setYPosition(y);
+
+        }
+
+    }
     private void createPlayers() {
         players = new ArrayList<>();
         Player player1 = new Player(24, 32, 1.5, 11, this);
@@ -75,7 +98,21 @@ public class LabyrinthControllerImpl implements LabyrinthController {
                 setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
                 setBomb(11, 3, 0, 2);
             }
-        }, 3000); //  (4 seconds)
+        }, 6000); //  (4 seconds)        Timer timer = new Timer();
+
+
+        Timer timer2 = new Timer();
+        timer2.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setPlayerPos(players, 7, 7, player1.getPlayerId());
+                setPlayerMoveState(players, Player.GO_LEFT, player1.getPlayerId());
+                setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
+//                setBomb(11, 3, 0, 2);
+                setBomb(3, 9, 0, 3);
+                setBomb(9, 8, 1, 5);
+            }
+        }, 9000); //  (4 seconds)
 
     }
 
@@ -89,8 +126,8 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         setBlock(11, 5);
         setBlock(9, 3);
 
-        setBomb(3, 9, 0, 3);
-        setBomb(9, 8, 1, 5);
+//        setBomb(3, 9, 0, 3);
+//        setBomb(9, 8, 1, 5);
 
         setBoosterBombCount(1, 1);
         setBoosterSpeed(2, 1);
@@ -387,8 +424,8 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     public void setPlayerPos(List<Player> players, double x, double y, long id) {
         for (Player player : players) {
             if (player.getPlayerId() == id) {
-                player.setxPosition(x);
-                player.setyPosition(y);
+                player.setXPosition(x);
+                player.setYPosition(y);
                 break;
             }
         }

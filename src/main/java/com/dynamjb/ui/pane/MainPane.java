@@ -40,6 +40,7 @@ public class MainPane extends Pane {
         // Add a listener to the redrawNeeded property
         viewModel.redrawNeededProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+                viewModel.doPlayers();
                 redrawStackedLabyrinth(viewModel.getLabyrinthSet(), viewModel.stackedLabyrinth);
                 viewModel.setRedrawNeeded(false);
             }

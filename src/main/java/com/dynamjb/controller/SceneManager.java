@@ -3,15 +3,20 @@ package com.dynamjb.controller;
 import com.dynamjb.ui.pane.MainPane;
 import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.animation.AnimationTimer;
+import javafx.animation.Timeline;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import java.util.Objects;
 
 import static com.dynamjb.constants.GameConstants.*;
+
 public class SceneManager {
     private final Stage stage;
     private final MainViewModel mainViewModel;
@@ -41,11 +46,13 @@ public class SceneManager {
         stage.setScene(scene);
         stage.show();
     }
+
     /**
      * Returns the main Scene for the application.
      * contains a BorderPane layout with AnchorPane regions and a MainPane.
      * sets up the background image, labels, ...
      * styled with CSS using the "styles.css" file.
+     *
      * @return The main Scene of the application.
      */
     protected Scene getMainScene() {
@@ -111,10 +118,25 @@ public class SceneManager {
         scene.getStylesheets().add(cssPath);
         scene.setUserData(mainPane); // Store a reference to the MainPane instance in the Scene's user data
 
+
+        // Pass key events to keyEventManager class
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                mainViewModel.keyEventManager.handlePressed(keyEvent);
+            }
+        });
+        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                mainViewModel.keyEventManager.handleReleased(keyEvent);
+            }
+        });
+
         return scene;
     }
 
-    private Label  addFramesCounter() {
+    private Label addFramesCounter() {
         Label fpsLabel = new Label("FPS: 0");
         fpsLabel.setId("fps-label");
         // Create an AnimationTimer to update the FPS label
