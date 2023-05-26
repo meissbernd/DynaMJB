@@ -1,7 +1,7 @@
 package com.dynamjb.controller;
 
-import com.dynamjb.DynaMJBApplication;
-import com.dynamjb.ui.gameobjects.Player;
+//import com.dynamjb.DynaMJBApplication;
+//import com.dynamjb.ui.gameobjects.Player;
 import com.dynamjb.ui.pane.MainPane;
 import com.dynamjb.ui.viewModel.MainViewModel;
 import javafx.animation.AnimationTimer;
@@ -13,25 +13,18 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import static com.dynamjb.constants.GameConstants.*;
-
-
 public class SceneManager {
-    private static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
-
-
     private final Stage stage;
     private final MainViewModel mainViewModel;
     private final LabyrinthControllerImpl labyrinthController;
 
-    private final KeyEventManager keyEventManager;
+//    private final KeyEventManager keyEventManager;
 
-    private final Player player1;
-    private final Player player2;
+//    private final Player player1;
+//    private final Player player2;
     Scene scene;
 
     public SceneManager(Stage stage) {
@@ -39,10 +32,11 @@ public class SceneManager {
         this.labyrinthController = new LabyrinthControllerImpl();
         this.mainViewModel = new MainViewModel(this.labyrinthController); // Create the ViewModel instance
 
-        this.player1 = mainViewModel.players.get(0);
-        this.player2 = mainViewModel.players.get(1);
-        this.keyEventManager = new KeyEventManager(this.player1, this.player2);
+//        this.player1 = mainViewModel.players.get(0);
+//        this.player2 = mainViewModel.players.get(1);
+//        this.keyEventManager = new KeyEventManager(this.player1, this.player2);
 
+        // Start Scene
         setScene(SceneType.MAIN);
     }
 
@@ -59,10 +53,16 @@ public class SceneManager {
         stage.setScene(scene);
         stage.show();
     }
-
+    /**
+     * Returns the main Scene for the application.
+     * contains a BorderPane layout with AnchorPane regions and a MainPane.
+     * sets up the background image, labels, ...
+     * styled with CSS using the "styles.css" file.
+     * @return The main Scene of the application.
+     */
     protected Scene getMainScene() {
 
-        // Create a new Image object with the path to your image file
+        // Create a new Image object with the path to image file
         String backgroundPath = Objects.requireNonNull(getClass().getResource(BACKGROUND_IMAGE)).toString();
         Image backgroundImage = new Image(backgroundPath);
 
@@ -107,7 +107,6 @@ public class SceneManager {
         player2Label.setPrefWidth(100.0);
         player2Label.setPrefHeight(20);
 
-
         anchorPaneTop.getChildren().add(addFramesCounter());
 
         root.setTop(anchorPaneTop);
@@ -124,13 +123,13 @@ public class SceneManager {
         scene.getStylesheets().add(cssPath);
         scene.setUserData(mainPane); // Store a reference to the MainPane instance in the Scene's user data
 
-        // Pass key events to keyEventManager class
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                keyEventManager.handle(keyEvent);
-            }
-        });
+//        // Pass key events to keyEventManager class
+//        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//            @Override
+//            public void handle(KeyEvent keyEvent) {
+//                keyEventManager.handle(keyEvent);
+//            }
+//        });
 
         return scene;
     }
@@ -149,7 +148,6 @@ public class SceneManager {
                     lastTime = now;
                     return;
                 }
-
                 frameCount++;
 
                 long elapsedNanos = now - lastTime;
@@ -164,10 +162,6 @@ public class SceneManager {
         fpsTimer.start();
         return fpsLabel;
     }
-
-
-// Start the FPS timer
-
 }
 
 enum SceneType {

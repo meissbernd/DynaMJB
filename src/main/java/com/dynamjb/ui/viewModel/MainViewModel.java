@@ -2,95 +2,79 @@ package com.dynamjb.ui.viewModel;
 
 import com.dynamjb.DynaMJBApplication;
 import com.dynamjb.controller.LabyrinthControllerImpl;
+import com.dynamjb.controller.LabyrinthObserver;
 import com.dynamjb.ui.gameobjects.Player;
 import com.dynamjb.ui.gameobjects.TileObject;
-import com.dynamjb.ui.pane.MainPane;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.ImagePattern;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.dynamjb.constants.GameConstants.*;
 
-public class MainViewModel {
+public class MainViewModel implements LabyrinthObserver {
     private static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
 
     // Represents the distance from the canvas where the play map starts,
     private double mapstartX = 1 * TILE_SIZE;
     private double mapstartY = 1 * TILE_SIZE;
-    public int[][] labyrinth;
-
+    public List<TileObject>[][] stackedLabyrinth;
     public List<Player> players;
     private static final long FRAME_TIME_NS = 1000000000L / FRAMES_PER_SECOND;
-    private LabyrinthControllerImpl labyrinthController;
+    private LabyrinthControllerImpl controller;
     private AnimationTimer gameLoop;
     private boolean isRunning = false;
     ImagePattern[] playerSet;
     ImagePattern[] labyrinthSet;
+
+    /**
+     * Constructs a MainViewModel object with the given LabyrinthControllerImpl.
+     * @param labyrinthController The LabyrinthControllerImpl associated with the MainViewModel.
+     */
     public MainViewModel(LabyrinthControllerImpl labyrinthController) {
-        this.labyrinthController = labyrinthController;
-        this.labyrinth = labyrinthController.getLabyrinth();
-         this.playerSet = labyrinthController.getPlayerSet();
-         this.labyrinthSet = labyrinthController.getLabyrinthSet();
+        this.controller = labyrinthController;
 
-        players = new ArrayList<>();
+        this.labyrinthSet = controller.getLabyrinthSet();
+        this.stackedLabyrinth = this.controller.getStackedLabyrinth();
 
-        players.add(new Player(
-                "/gfx/bomberman1.png",
-                24,
-                32,
-                1.5,
-                10,
-                this
-        ));
-        players.add(new Player(
-                "/gfx/bomberman1.png",
-                24,
-                32,
-                5,
-                2,
-                this
-        ));
+        this.playerSet = controller.getPlayerSet();
+        this.players = controller.getPlayers();
+
     }
 
-    public void onEvent(TileObjectEvent event, int id) {
-
-        switch (event) {
-            case ANIMATION_FINISH:
-                logger.log(Level.INFO, "tileObject with id: " + id + " finished");
-                break;
-        }
-    }
-    public List<TileObject>[][] getStackedLabyrinth() {
-        return labyrinthController.getStackedLabyrinth();
-    }
-
-public ImagePattern[] getPlayerSet(){
-        return this.playerSet;
-}public ImagePattern[] getLabyrinthSet(){
-        return labyrinthController.getLabyrinthSet();
-}
-    //    public TileObject[] createTileObjectMap(){
-//        List<?>[][] tileObjectMap = new Array[LABYRINTH.length][LABYRINTH[0].length];
+//    public void onEvent(TileObjectEvent event, int id) {
+//
+//        switch (event) {
+//            case ANIMATION_FINISH:
+//                logger.log(Level.INFO, "tileObject with id: " + id + " finished");
+//                break;
+//        }
 //    }
+
+    private void updateStackedLabyrinth() {
+        stackedLabyrinth=  controller.getStackedLabyrinth();
+    }
+    private void updatePlayer(){
+        players = controller.getPlayers();
+    }
+
+    public ImagePattern[] getPlayerSet() {
+        return this.playerSet;
+    }
+
+    public ImagePattern[] getLabyrinthSet() {
+        return this.controller.getLabyrinthSet();
+    }
+
     private void createTestPlayers() {
         players = new ArrayList<>();
 
     }
-
-//    private int[][] getLabyrinth() {
-//        this.labyrinth = labyrinthController.getLabyrinth();
-//    }
 
     public void startGameLoop() {
         gameLoop = new AnimationTimer() {
@@ -114,12 +98,26 @@ public ImagePattern[] getPlayerSet(){
         }
         isRunning = false;
     }
+    public List<Player> getPlayers() {
+        this.players = controller.getPlayers();
+        return this.players;
+    }
 
+    // Implement the LabyrinthObserver interface methods
+    @Override
+    public void onLabyrinthChanged(int[][] labyrinth) {
+        updateStackedLabyrinth();
+
+    }
+    @Override
+    public void onPlayerChanged(List<Player> players) {
+        updatePlayer();
+    }
+    //------------------------- redrawNeeded --------------------------
     public boolean isRunning() {
         return isRunning;
     }
 
-    //------------------------- redrawNeeded --------------------------
     private BooleanProperty redrawNeeded = new SimpleBooleanProperty(false);
 
     public BooleanProperty redrawNeededProperty() {
@@ -150,7 +148,7 @@ public ImagePattern[] getPlayerSet(){
     }
 }
 
-enum TileObjectEvent {
-    ANIMATION_FINISH
-}
+//enum TileObjectEvent {
+//    ANIMATION_FINISH
+//}
 
