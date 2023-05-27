@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.ImagePattern;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,7 +31,7 @@ public class MainViewModel implements LabyrinthObserver {
     public List<Player> players;
     private static final long FRAME_TIME_NS = 1000000000L / FRAMES_PER_SECOND;
     private LabyrinthControllerImpl controller;
-    public KeyEventManager  keyEventManager;
+    public KeyEventManager keyEventManager;
 
     private KeyEvent keyEvent = new KeyEvent(
             KeyEvent.KEY_RELEASED,
@@ -44,6 +45,7 @@ public class MainViewModel implements LabyrinthObserver {
 
     /**
      * Constructs a MainViewModel object with the given LabyrinthControllerImpl.
+     *
      * @param labyrinthController The LabyrinthControllerImpl associated with the MainViewModel.
      */
     public MainViewModel(LabyrinthControllerImpl labyrinthController) {
@@ -55,15 +57,15 @@ public class MainViewModel implements LabyrinthObserver {
         this.playerSet = controller.getPlayerSet();
         this.players = controller.getPlayers();
 
-        this.keyEventManager =new KeyEventManager(controller.getPlayer(0), controller.getPlayer(1));
+        this.keyEventManager = new KeyEventManager(controller.getControllerOfPlayer1(), controller.getControllerOfPlayer2());
     }
 
-    public void doPlayers(){
+    public void doPlayers() {
         controller.updatePlayers();
     }
 
     private void updateStackedLabyrinth() {
-        stackedLabyrinth=  controller.getStackedLabyrinth();
+        stackedLabyrinth = controller.getStackedLabyrinth();
     }
 
     public ImagePattern[] getPlayerSet() {
@@ -101,6 +103,7 @@ public class MainViewModel implements LabyrinthObserver {
         }
         isRunning = false;
     }
+
     public List<Player> getPlayers() {
         this.players = controller.getPlayers();
         return this.players;
@@ -112,7 +115,8 @@ public class MainViewModel implements LabyrinthObserver {
         updateStackedLabyrinth();
 
     }
-//    @Override
+
+    //    @Override
 //    public void onPlayerChanged(List<Player> players) {
 //        updatePlayer();
 //    }
@@ -149,6 +153,7 @@ public class MainViewModel implements LabyrinthObserver {
     public void setRootHeight(double height) {
         rootHeight.set(height);
     }
+
     public KeyEvent getKeyEvent() {
         return keyEvent;
     }

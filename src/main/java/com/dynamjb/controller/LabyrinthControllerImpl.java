@@ -47,23 +47,33 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     // Player
     static String playerPath = Objects.requireNonNull(MainPane.class.getResource(PLAYER_IMAGE)).toString();
     private ImagePattern[] playerSet;
-    private List<Player> players;
-
+    private final List<Player> players;
+    private List<PlayerController> controlledPlayers;
 
     public LabyrinthControllerImpl() {
         this.labyrinthSet = loadTileset(tilePath, TILE_SIZE, TILE_SIZE);
         this.playerSet = loadTileset(playerPath, 24, 32);
         // Set Borders for FameClipping
         setBorders(1, 1, 1, 1);
-        createPlayers();
+
+        this.players = createPlayers();
+        this.controlledPlayers = createPlayerControllers(this.players);
 
         this.stackedLabyrinth = createLabyrinth(labyrinth, solidTiles);
         addBlocksAndBoostersToLabyrinth();
     }
 
-    public Player getPlayer(int player) {
-        return players.get(player);
+//    public Player getPlayer(int player) {
+//        return players.get(player);
+//    }
+
+    public PlayerController getControllerOfPlayer1() {
+        return this.controlledPlayers.get(0);
     }
+    public PlayerController getControllerOfPlayer2() {
+        return this.controlledPlayers.get(1);
+    }
+
 
     /**
      * Do all updates of players (move in labyrinth, collision with flames, boost velocity
@@ -122,40 +132,24 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         }
     }
 
-    private void createPlayers() {
-        players = new ArrayList<>();
+    private List<Player> createPlayers() {
+        ArrayList<Player> players = new ArrayList<>();
         Player player1 = new Player(24, 32, 1.5, 11, this);
         Player player2 = new Player(24, 32, 3, 4, this);
         players.add(player1);
         players.add(player2);
-        setPlayerMoveState(players, Player.GO_DOWN, player2.getPlayerId());
-
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                setPlayerPos(players, 7, 7, player1.getPlayerId());
-//                setPlayerMoveState(players, Player.GO_LEFT, player1.getPlayerId());
-//                setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
-//                setBomb(11, 3, 0, 2);
-//            }
-//        }, 6000); //  (4 seconds)        Timer timer = new Timer();
-//
-//
-//        Timer timer2 = new Timer();
-//        timer2.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                setPlayerPos(players, 7, 7, player1.getPlayerId());
-//                setPlayerMoveState(players, Player.GO_LEFT, player1.getPlayerId());
-//                setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
-////                setBomb(11, 3, 0, 2);
-//                setBomb(3, 9, 0, 3);
-//                setBomb(9, 8, 1, 5);
-//            }
-//        }, 9000); //  (4 seconds)
-
+//        setPlayerMoveState(players, Player.GO_DOWN, player2.getPlayerId());
+        return players;
     }
+
+    private List<PlayerController> createPlayerControllers(List<Player> players) {
+        controlledPlayers = new ArrayList<>();
+        for (Player player : players) {
+            controlledPlayers.add(new PlayerController(player));
+        }
+        return controlledPlayers;
+    }
+
 
     private void addBlocksAndBoostersToLabyrinth() {
         setBlock(4, 3);

@@ -7,12 +7,12 @@ import static javafx.scene.input.KeyCode.*;
 
 public class KeyEventManager {
 
-    PlayerController controlledPlayer1;
-    PlayerController controlledPlayer2;
+    private final PlayerController controlledPlayer1;
+    private final PlayerController controlledPlayer2;
 
-    public KeyEventManager(Player player1, Player player2) {
-        this.controlledPlayer1 = new PlayerController(player1);
-        this.controlledPlayer2 = new PlayerController(player2);
+    public KeyEventManager(PlayerController player1, PlayerController player2) {
+        this.controlledPlayer1 = player1;
+        this.controlledPlayer2 = player2;
     }
 
     public void handleReleased(KeyEvent keyEvent) {
