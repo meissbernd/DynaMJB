@@ -12,16 +12,28 @@ public class PlayerController {
     }
 
     public void increaseXPos(){
-        contolledPlayer.setXPosition(contolledPlayer.getXPosition() + 0.5);
+        double dx = contolledPlayer.getSpeed();
+        contolledPlayer.setXPosition(contolledPlayer.getXPosition() + dx);
     }
     public void decreaseXPos(){
-        contolledPlayer.setXPosition(contolledPlayer.getXPosition() - 0.5);
+        double dx = contolledPlayer.getSpeed();
+        contolledPlayer.setXPosition(contolledPlayer.getXPosition() - dx);
     }
 
     public void increaseYPos(){
-        contolledPlayer.setYPosition(contolledPlayer.getYPosition() + 0.5);
+        double dy = contolledPlayer.getSpeed();
+        contolledPlayer.setYPosition(contolledPlayer.getYPosition() + dy);
     }
     public void decreaseYPos() {
-        contolledPlayer.setYPosition(contolledPlayer.getYPosition() - 0.5);
+        double dy = contolledPlayer.getSpeed();
+        contolledPlayer.setYPosition(contolledPlayer.getYPosition() - dy);
+    }
+    public void clearVelocity(){
+        contolledPlayer.setVelocityX(0);
+        contolledPlayer.setVelocityY(0);
+    }
+    public void setVelocity(double vertical, double horizontal){
+        contolledPlayer.setVelocityY(vertical);
+        contolledPlayer.setVelocityX(horizontal);
     }
 }

@@ -1,6 +1,7 @@
 package com.dynamjb.ui.viewModel;
 
 import com.dynamjb.DynaMJBApplication;
+import com.dynamjb.controller.KeyEventManager;
 import com.dynamjb.controller.LabyrinthControllerImpl;
 import com.dynamjb.controller.LabyrinthObserver;
 import com.dynamjb.ui.gameobjects.Player;
@@ -10,6 +11,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.ImagePattern;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,13 @@ public class MainViewModel implements LabyrinthObserver {
     public List<Player> players;
     private static final long FRAME_TIME_NS = 1000000000L / FRAMES_PER_SECOND;
     private LabyrinthControllerImpl controller;
+    public KeyEventManager  keyEventManager;
+
+    private KeyEvent keyEvent = new KeyEvent(
+            KeyEvent.KEY_RELEASED,
+            "", "",
+            KeyCode.UNDEFINED,
+            false, false, false, false);
     private AnimationTimer gameLoop;
     private boolean isRunning = false;
     ImagePattern[] playerSet;
@@ -45,16 +55,12 @@ public class MainViewModel implements LabyrinthObserver {
         this.playerSet = controller.getPlayerSet();
         this.players = controller.getPlayers();
 
+        this.keyEventManager =new KeyEventManager(controller.getPlayer(0), controller.getPlayer(1));
     }
 
-//    public void onEvent(TileObjectEvent event, int id) {
-//
-//        switch (event) {
-//            case ANIMATION_FINISH:
-//                logger.log(Level.INFO, "tileObject with id: " + id + " finished");
-//                break;
-//        }
-//    }
+    public void doPlayers(){
+        controller.doPlayers();
+    }
 
     private void updateStackedLabyrinth() {
         stackedLabyrinth=  controller.getStackedLabyrinth();
@@ -145,6 +151,13 @@ public class MainViewModel implements LabyrinthObserver {
 
     public void setRootHeight(double height) {
         rootHeight.set(height);
+    }
+    public KeyEvent getKeyEvent() {
+        return keyEvent;
+    }
+
+    public void setKeyEvent(KeyEvent keyEvent) {
+        this.keyEvent = keyEvent;
     }
 }
 
