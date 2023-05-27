@@ -59,15 +59,12 @@ public class MainViewModel implements LabyrinthObserver {
     }
 
     public void doPlayers(){
-        controller.doPlayers();
+        controller.updatePlayers();
     }
 
     private void updateStackedLabyrinth() {
         stackedLabyrinth=  controller.getStackedLabyrinth();
     }
-//    private void updatePlayer(){
-//        players = controller.getPlayers();
-//    }
 
     public ImagePattern[] getPlayerSet() {
         return this.playerSet;
