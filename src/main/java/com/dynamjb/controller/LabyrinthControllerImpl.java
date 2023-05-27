@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.dynamjb.constants.GameConstants.*;
+import static java.lang.Math.round;
 
 public class LabyrinthControllerImpl implements LabyrinthController {
     public static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
@@ -60,20 +61,41 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         createStackedLabyrinth();
     }
 
-    public Player getPlayer(int player){
+    public Player getPlayer(int player) {
         return players.get(player);
     }
 
-    public void doPlayers(){
-        for (Player player:players){
+    public void doPlayers() {
+        for (Player player : players) {
             double x = player.getXPosition();
-            double y =player.getYPosition();
-            double velocitX = player.getVelocityX();
-            double velocitY = player.getVelocityY();
+            double y = player.getYPosition();
+            double velocityX = player.getVelocityX();
+            double velocityY = player.getVelocityY();
+
 
             // Check Position in Map, Collision with Flames or Booster ...
-            x += velocitX;
-            y += velocitY;
+            x += velocityX;
+            y += velocityY;
+
+            Coordinates left = new Coordinates((int)x-1, (int)y);
+            Coordinates leftDown = new Coordinates((int)x-1, (int)y+1);
+            Coordinates right = new Coordinates((int)x+1, (int)y);
+            Coordinates rightDown = new Coordinates((int)x-1, (int)y+1);
+
+            if((y-(int)y) <0.5) {
+                if (isTileObject(right, WallTile.class)) {
+                    x = (int) x;
+                    y = y + velocityX;
+                }
+            } else {
+                if (isTileObject(rightDown, WallTile.class)) {
+                    x = (int) x;
+                    y = y - velocityX;
+                }
+            }
+
+
+
 
             player.setXPosition(x);
             player.setYPosition(y);
@@ -81,6 +103,22 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         }
 
     }
+    double adjustVertical(double vertical, double velocity){
+        if(vertical-(int)vertical < 0.5){
+            if((vertical+velocity)-(int)(vertical+velocity) < 0.5){
+                return vertical+velocity;
+            } else {
+                return (int)(vertical+velocity);
+            }
+        }else {
+            if((vertical+velocity)-(int)(vertical+velocity) >= 0.5){
+                return vertical+velocity;
+            } else {
+                return (int)(vertical+velocity);
+            }
+        }
+    }
+
     private void createPlayers() {
         players = new ArrayList<>();
         Player player1 = new Player(24, 32, 1.5, 11, this);
@@ -89,30 +127,30 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         players.add(player2);
         setPlayerMoveState(players, Player.GO_DOWN, player2.getPlayerId());
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                setPlayerPos(players, 7, 7, player1.getPlayerId());
-                setPlayerMoveState(players, Player.GO_LEFT, player1.getPlayerId());
-                setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
-                setBomb(11, 3, 0, 2);
-            }
-        }, 6000); //  (4 seconds)        Timer timer = new Timer();
-
-
-        Timer timer2 = new Timer();
-        timer2.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                setPlayerPos(players, 7, 7, player1.getPlayerId());
-                setPlayerMoveState(players, Player.GO_LEFT, player1.getPlayerId());
-                setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                setPlayerPos(players, 7, 7, player1.getPlayerId());
+//                setPlayerMoveState(players, Player.GO_LEFT, player1.getPlayerId());
+//                setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
 //                setBomb(11, 3, 0, 2);
-                setBomb(3, 9, 0, 3);
-                setBomb(9, 8, 1, 5);
-            }
-        }, 9000); //  (4 seconds)
+//            }
+//        }, 6000); //  (4 seconds)        Timer timer = new Timer();
+//
+//
+//        Timer timer2 = new Timer();
+//        timer2.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                setPlayerPos(players, 7, 7, player1.getPlayerId());
+//                setPlayerMoveState(players, Player.GO_LEFT, player1.getPlayerId());
+//                setPlayerMoveState(players, Player.GO_UP, player2.getPlayerId());
+////                setBomb(11, 3, 0, 2);
+//                setBomb(3, 9, 0, 3);
+//                setBomb(9, 8, 1, 5);
+//            }
+//        }, 9000); //  (4 seconds)
 
     }
 
@@ -131,10 +169,10 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
         setBoosterBombCount(1, 1);
         setBoosterSpeed(2, 1);
-        setBoosterInvincible(3,1);
+        setBoosterInvincible(3, 1);
         setBoosterLife(4, 1);
-        setBoosterBombStrength(5,1);
-        setBoosterPhasing(6,7);
+        setBoosterBombStrength(5, 1);
+        setBoosterPhasing(6, 7);
     }
 
     private boolean inLabyrinth(int x, int y) {
@@ -238,27 +276,33 @@ public class LabyrinthControllerImpl implements LabyrinthController {
                 new int[]{112, 112, 113, 114, 112, 112, 113, 114, 112, 112, 113, 114},
                 this
         );
-           addTileObjectToStackedLabyrinth(x, y, bomb);
+        addTileObjectToStackedLabyrinth(x, y, bomb);
     }
 
     private void setBoosterBombCount(int x, int y) {
         addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{128, 129}, this));
     }
+
     private void setBoosterBombStrength(int x, int y) {
         addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{136, 137}, this));
     }
+
     private void setBoosterPhasing(int x, int y) {
         addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{138, 139}, this));
     }
+
     private void setBoosterSpeed(int x, int y) {
         addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{130, 131}, this));
     }
+
     private void setBoosterLife(int x, int y) {
         addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{134, 135}, this));
     }
+
     private void setBoosterInvincible(int x, int y) {
         addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{132, 133}, this));
     }
+
     @Override
     public List<TileObject>[][] getStackedLabyrinth() {
         return stackedLabyrinth;
@@ -275,6 +319,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
     /**
      * Adds a TileObject to the stacked labyrinth at coordinates (x, y) if there is no solid tile.
+     *
      * @param x          The x-coordinate of the tile.
      * @param y          The y-coordinate of the tile.
      * @param tileObject The TileObject to add.
@@ -314,6 +359,12 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         this.stackedLabyrinth = stackedLabyrinth;
     }
 
+    /**
+     * Checks tile if solid for Labyrinth creation
+     *
+     * @param imageOffset the image offset of the tile
+     * @return true if tile must be solid
+     */
     private boolean isTileSolid(int imageOffset) {
         for (int solidTile : solidTiles) {
             if (imageOffset == solidTile) {
@@ -442,6 +493,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
     /**
      * Checks if a tile at the coordinates (x, y) is destrutible and start the animation .
+     *
      * @param x The x-coordinate of the tile.
      * @param y The y-coordinate of the tile.
      */
@@ -457,6 +509,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
     /**
      * Checks if a tile at the coordinates (x, y) is solid .
+     *
      * @param x The x-coordinate of the tile.
      * @param y The y-coordinate of the tile.
      * @return True if the tile is solid, false otherwise.
@@ -471,13 +524,34 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         }
         return false;
     }
+    /**
+     * Checks if there is a tile object of the specified type at the given coordinates in the labyrinth.
+     * @param x The x-coordinate of the tile object.
+     * @param y The y-coordinate of the tile object.
+     * @param tileType The type of tile object to check for.
+     * @return {@code false} if a tile object of the specified type is found, {@code false} otherwise.
+     */
+    public boolean isTileObject(int x, int y, Class<? extends TileObject> tileType) {
+        List<TileObject> tileObjects = stackedLabyrinth[y][x];
+
+        for (TileObject tileObject : tileObjects) {
+            if (tileType.isInstance(tileObject)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isTileObject(Coordinates coord, Class<? extends TileObject> tileType) {
+        return isTileObject(coord.getX(), coord.y, tileType);
+    }
 
     /**
-     *  Checks if a tile at the coordinates (x, y) is explosive.
-     *  Returns the ID of the explosive object if found, or -1 if no explosive object is present.
-     *  @param x The x-coordinate of the tile.
-     *  @param y The y-coordinate of the tile.
-     *  @return The ID of the explosive object, or -1 if no explosive object is present.
+     * Checks if a tile at the coordinates (x, y) is explosive.
+     * Returns the ID of the explosive object if found, or -1 if no explosive object is present.
+     *
+     * @param x The x-coordinate of the tile.
+     * @param y The y-coordinate of the tile.
+     * @return The ID of the explosive object, or -1 if no explosive object is present.
      */
     public long isExplosive(int x, int y) {
         List<TileObject> tileObjects = stackedLabyrinth[y][x];
@@ -492,7 +566,8 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     /**
      * Handles the event when an animation finishes for a specific tile object.
      * Performs actions based on the provided AnimationFinishEvent.
-     * @param id The ID of the tile object.
+     *
+     * @param id                   The ID of the tile object.
      * @param animationFinishEvent The type of animation finish event.
      */
     public void animationFinished(long id, TileObject.AnimationFinishEvent animationFinishEvent) {
@@ -507,4 +582,30 @@ public class LabyrinthControllerImpl implements LabyrinthController {
                 logger.log(Level.INFO, "Tile with id : " + id + " " + animationFinishEvent.toString());
         }
     }
+    public class Coordinates {
+        private int x;
+        private int y;
+
+        public Coordinates(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
+    }
+
 }
