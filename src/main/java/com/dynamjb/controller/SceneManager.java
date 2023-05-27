@@ -46,11 +46,13 @@ public class SceneManager {
         stage.setScene(scene);
         stage.show();
     }
+
     /**
      * Returns the main Scene for the application.
      * contains a BorderPane layout with AnchorPane regions and a MainPane.
      * sets up the background image, labels, ...
      * styled with CSS using the "styles.css" file.
+     *
      * @return The main Scene of the application.
      */
     protected Scene getMainScene() {
