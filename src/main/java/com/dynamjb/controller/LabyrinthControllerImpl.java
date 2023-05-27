@@ -5,7 +5,6 @@ import com.dynamjb.ui.gameobjects.*;
 import com.dynamjb.ui.pane.MainPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.ImagePattern;
 
 import java.util.*;
@@ -35,30 +34,31 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     };
 
     // StackedLabyrinth Borders for Clipping
-    int minX;
-    int maxX;
-    int minY;
-    int maxY;
+    private int minX;
+    private int maxX;
+    private int minY;
+    private int maxY;
 
     // Offsets of solid Tiles
     private int[] solidTiles = {44};
     static String tilePath = Objects.requireNonNull(MainPane.class.getResource(LABYRINTH_IMAGE)).toString();
-    public static ImagePattern[] labyrinthset;
+    private ImagePattern[] labyrinthSet;
     List<TileObject>[][] stackedLabyrinth;
     // Player
     static String playerPath = Objects.requireNonNull(MainPane.class.getResource(PLAYER_IMAGE)).toString();
-    public static ImagePattern[] playerset;
-    public List<Player> players;
+    private ImagePattern[] playerSet;
+    private List<Player> players;
 
 
     public LabyrinthControllerImpl() {
-        labyrinthset = loadTileset(tilePath, TILE_SIZE, TILE_SIZE);
-        playerset = loadTileset(playerPath, 24, 32);
+        this.labyrinthSet = loadTileset(tilePath, TILE_SIZE, TILE_SIZE);
+        this.playerSet = loadTileset(playerPath, 24, 32);
         // Set Borders for FameClipping
         setBorders(1, 1, 1, 1);
         createPlayers();
 
-        createStackedLabyrinth();
+        this.stackedLabyrinth = createLabyrinth(labyrinth, solidTiles);
+        addBlocksAndBoostersToLabyrinth();
     }
 
     public Player getPlayer(int player) {
@@ -68,8 +68,11 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     /**
      * Do all updates of players (move in labyrinth, collision with flames, boost velocity
      */
-    public void doPlayers() {
+    public void updatePlayers() {
         for (Player player : players) {
+
+            // ToDo: player.update()
+
             double x = player.getXPosition();
             double y = player.getYPosition();
             double velocityX = player.getVelocityX();
@@ -96,9 +99,6 @@ public class LabyrinthControllerImpl implements LabyrinthController {
                     y = y - velocityX;
                 }
             }
-
-
-
 
             player.setXPosition(x);
             player.setYPosition(y);
@@ -157,9 +157,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
     }
 
-    private void createStackedLabyrinth() {
-        createLabyrinth(labyrinth, solidTiles);
-
+    private void addBlocksAndBoostersToLabyrinth() {
         setBlock(4, 3);
         setBlock(2, 5);
         setBlock(4, 7);
@@ -313,11 +311,11 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
     @Override
     public ImagePattern[] getPlayerSet() {
-        return playerset;
+        return playerSet;
     }
 
     public ImagePattern[] getLabyrinthSet() {
-        return labyrinthset;
+        return labyrinthSet;
     }
 
     /**
@@ -336,7 +334,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         return false;
     }
 
-    private void createLabyrinth(int[][] labyrinth, int[] solidTiles) {
+    private List<TileObject>[][] createLabyrinth(int[][] labyrinth, int[] solidTiles) {
         int rows = labyrinth.length;
         int columns = labyrinth[0].length;
 
@@ -359,7 +357,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
                 }
             }
         }
-        this.stackedLabyrinth = stackedLabyrinth;
+        return stackedLabyrinth;
     }
 
     /**
