@@ -79,8 +79,10 @@ public class LabyrinthControllerImpl implements LabyrinthController {
      * Do all updates of players (move in labyrinth, collision with flames, boost velocity
      */
     public void updatePlayers() {
-        for (Player player : players) {
+//        for (Player player : players) {
+        for (PlayerController controlledPlayer : this.controlledPlayers) {
 
+            Player player = controlledPlayer.getPlayer();
             // ToDo: player.update()
 
             double x = player.getXPosition();
