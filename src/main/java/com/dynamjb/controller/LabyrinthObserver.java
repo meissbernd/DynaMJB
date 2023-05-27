@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface LabyrinthObserver {
     void onLabyrinthChanged(int[][] labyrinth);
-    void onPlayerChanged(List<Player> players);
+//    void onPlayerChanged(List<Player> players);
 }

@@ -65,9 +65,9 @@ public class MainViewModel implements LabyrinthObserver {
     private void updateStackedLabyrinth() {
         stackedLabyrinth=  controller.getStackedLabyrinth();
     }
-    private void updatePlayer(){
-        players = controller.getPlayers();
-    }
+//    private void updatePlayer(){
+//        players = controller.getPlayers();
+//    }
 
     public ImagePattern[] getPlayerSet() {
         return this.playerSet;
@@ -115,10 +115,10 @@ public class MainViewModel implements LabyrinthObserver {
         updateStackedLabyrinth();
 
     }
-    @Override
-    public void onPlayerChanged(List<Player> players) {
-        updatePlayer();
-    }
+//    @Override
+//    public void onPlayerChanged(List<Player> players) {
+//        updatePlayer();
+//    }
     //------------------------- redrawNeeded --------------------------
     public boolean isRunning() {
         return isRunning;
