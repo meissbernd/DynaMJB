@@ -45,7 +45,9 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         this.players = createPlayers();
         this.controlledPlayers = createPlayerControllers(this.players);
 
-        this.stackedLabyrinth = createLabyrinth(this.labyrinth, solidTiles);
+        LabyrinthStacked myStackedLabyrinth = new LabyrinthStacked(this.labyrinth, solidTiles, this);
+        this.stackedLabyrinth = myStackedLabyrinth.tilesOfLabyrinth;
+
         addBlocksAndBoostersToLabyrinth();
     }
 
