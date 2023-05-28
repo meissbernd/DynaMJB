@@ -47,13 +47,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
         LabyrinthStacked myStackedLabyrinth = new LabyrinthStacked(this.labyrinth, solidTiles, this);
         this.stackedLabyrinth = myStackedLabyrinth.tilesOfLabyrinth;
-
-        addBlocksAndBoostersToLabyrinth();
     }
-
-//    public Player getPlayer(int player) {
-//        return players.get(player);
-//    }
 
     public PlayerController getControllerOfPlayer1() {
         return this.controlledPlayers.get(0);
@@ -139,25 +133,6 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         return controlledPlayers;
     }
 
-
-    private void addBlocksAndBoostersToLabyrinth() {
-        setBlock(4, 3);
-        setBlock(2, 5);
-        setBlock(4, 7);
-        setBlock(8, 7);
-        setBlock(11, 5);
-        setBlock(9, 3);
-
-//        setBomb(3, 9, 0, 3);
-//        setBomb(9, 8, 1, 5);
-
-        setBoosterBombCount(1, 1);
-        setBoosterSpeed(2, 1);
-        setBoosterInvincible(3, 1);
-        setBoosterLife(4, 1);
-        setBoosterBombStrength(5, 1);
-        setBoosterPhasing(6, 7);
-    }
 
     private boolean inLabyrinth(int x, int y) {
         return ((x >= minX) && (x <= maxX) && (y >= minY) && (y <= maxY));
@@ -245,46 +220,6 @@ public class LabyrinthControllerImpl implements LabyrinthController {
             }
         }
         return true;
-    }
-
-    private void setBlock(int x, int y) {
-        Block block = new Block(new int[]{16, 17, 18, 19, 20, 21, 22}, this);
-        addTileObjectToStackedLabyrinth(x, y,
-                block);
-    }
-
-    private void setBomb(int x, int y, long ownerId, int strenght) {
-        Bomb bomb = new Bomb(
-                ownerId,
-                strenght,
-                new int[]{112, 112, 113, 114, 112, 112, 113, 114, 112, 112, 113, 114},
-                this
-        );
-        addTileObjectToStackedLabyrinth(x, y, bomb);
-    }
-
-    private void setBoosterBombCount(int x, int y) {
-        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{128, 129}, this));
-    }
-
-    private void setBoosterBombStrength(int x, int y) {
-        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{136, 137}, this));
-    }
-
-    private void setBoosterPhasing(int x, int y) {
-        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{138, 139}, this));
-    }
-
-    private void setBoosterSpeed(int x, int y) {
-        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{130, 131}, this));
-    }
-
-    private void setBoosterLife(int x, int y) {
-        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{134, 135}, this));
-    }
-
-    private void setBoosterInvincible(int x, int y) {
-        addTileObjectToStackedLabyrinth(x, y, new BoosterBombCount(new int[]{132, 133}, this));
     }
 
     @Override
