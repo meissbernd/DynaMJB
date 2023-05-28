@@ -36,7 +36,7 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
             int imageOffset = labyrinth[i][j];
 
             if (isTileSolid(imageOffset)) {
-                this.stackedLabyrinthWithTiles[i][j].add(new WallTile(imageOffset, this.controller));
+                this.stackedLabyrinthWithTiles[i][j].add(new WallTile(imageOffset, this.controller, i, j));
             } else {
                 this.stackedLabyrinthWithTiles[i][j].add(new GroundTile(imageOffset, this.controller));
             }
@@ -52,6 +52,13 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
 
     public TileObject getTileAtGridPosition(int x_grid, int y_grid) {
         return this.stackedLabyrinthWithTiles[x_grid][y_grid].get(0);
+    }
+
+    public TileObject getTileAtCoords(double x, double y) {
+        int x_grid = (int)Math.round(x);
+        int y_grid = (int)Math.round(y);
+        TileObject tile = this.stackedLabyrinthWithTiles[x_grid][y_grid].get(0);
+        return tile;
     }
 
     public boolean inLabyrinth(int x_grid, int y_grid) {
@@ -126,8 +133,8 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
     /**
      * Checks if a tile at the coordinates (x, y) is solid .
      *
-     * @param x The x-coordinate of the tile.
-     * @param y The y-coordinate of the tile.
+     * @param x_grid The x-coordinate of the tile.
+     * @param y_grid The y-coordinate of the tile.
      * @return True if the tile is solid, false otherwise.
      */
     public boolean isSolid(int x_grid, int y_grid) {

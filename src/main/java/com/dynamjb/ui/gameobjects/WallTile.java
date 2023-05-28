@@ -7,4 +7,8 @@ public class WallTile extends TileObject{
         super(imageOffset, controller);
         setSolid(true);
     }
+    public WallTile(int imageOffset, LabyrinthControllerImpl controller, int x, int y) {
+        super(imageOffset, controller, x, y);
+        setSolid(true);
+    }
 }

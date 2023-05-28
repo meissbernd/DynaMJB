@@ -7,4 +7,9 @@ public class GroundTile extends TileObject{
         super(imageOffset, controller);
         setSolid(false);
     }
+
+    public GroundTile(int imageOffset, LabyrinthControllerImpl controller, int x, int y) {
+        super(imageOffset, controller, x, y);
+        setSolid(false);
+    }
 }

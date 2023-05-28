@@ -11,6 +11,10 @@ import java.util.logging.Logger;
 
 public class TileObject {
     public static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
+
+    public int xOfCenter;
+    public int yOfCenter;
+
     LabyrinthControllerImpl controller;
     static long counter = 0;
     private final long id;
@@ -94,7 +98,7 @@ public class TileObject {
             int[] animationPattern,
             LabyrinthControllerImpl controller
     ) {
-        this(animationPattern, AnimationFinishEvent.NONE, true, controller);
+        this(animationPattern, AnimationFinishEvent.NONE, true, controller, -1, -1);
     }
 
     public TileObject(
@@ -102,7 +106,7 @@ public class TileObject {
             boolean startAnimation,
             LabyrinthControllerImpl controller
     ) {
-        this(animationPattern, AnimationFinishEvent.NONE, startAnimation, controller);
+        this(animationPattern, AnimationFinishEvent.NONE, startAnimation, controller, -1, -1);
     }
 
     public TileObject(
@@ -110,6 +114,15 @@ public class TileObject {
             AnimationFinishEvent animationFinishEvent,
             boolean startAnimation,
             LabyrinthControllerImpl controller
+    ) {this(animationPattern, animationFinishEvent, startAnimation, controller, -1, -1);}
+
+    public TileObject(
+            int[] animationPattern,
+            AnimationFinishEvent animationFinishEvent,
+            boolean startAnimation,
+            LabyrinthControllerImpl controller,
+            int xOfCenter,
+            int yOfCenter
     ) {
         this.controller = controller;
         this.id = counter++;
@@ -119,6 +132,8 @@ public class TileObject {
         if (startAnimation) {
             this.animationTimeline.play();
         }
+        this.xOfCenter = xOfCenter;
+        this.yOfCenter = yOfCenter;
     }
 
 
@@ -130,6 +145,20 @@ public class TileObject {
         this.id = counter++;
         this.animationFinishEvent = AnimationFinishEvent.NONE;
         this.animationPattern = new int[]{imageOffset};
+    }
+
+    public TileObject(
+            int imageOffset,
+            LabyrinthControllerImpl controller,
+            int xOfCenter,
+            int yOfCenter
+    ) {
+        this.controller = controller;
+        this.id = counter++;
+        this.animationFinishEvent = AnimationFinishEvent.NONE;
+        this.animationPattern = new int[]{imageOffset};
+        this.xOfCenter = xOfCenter;
+        this.yOfCenter = yOfCenter;
     }
 
     public TileObject(

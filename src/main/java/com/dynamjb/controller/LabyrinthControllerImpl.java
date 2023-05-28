@@ -40,7 +40,11 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         this.stackedLabyrinth = new LabyrinthStacked(this.labyrinth, solidTiles, this);
         this.stackedLabyrinthTiles = this.stackedLabyrinth.stackedLabyrinthWithTiles;
 
+        // just testing
         TileObject aaa= this.stackedLabyrinth.getTileAtGridPosition(2,2);
+        System.out.println("Center 2,2 : " + aaa.xOfCenter + " " + aaa.yOfCenter);
+        TileObject bbb= this.stackedLabyrinth.getTileAtCoords(2.1,2.1);
+        System.out.println("Center 2.1, 2.1 : " + bbb.xOfCenter + " " + bbb.yOfCenter);
         System.out.println("0,0: " + this.stackedLabyrinth.getTileAtGridPosition(0,0).isSolid());
         System.out.println("1,1: " + this.stackedLabyrinth.getTileAtGridPosition(1,1).toString());
         System.out.println("2,2: " + this.stackedLabyrinth.getTileAtGridPosition(2,2).toString());
