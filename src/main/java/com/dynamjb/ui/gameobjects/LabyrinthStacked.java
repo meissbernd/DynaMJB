@@ -7,7 +7,7 @@ import java.util.List;
 
 public class LabyrinthStacked {
 
-    public List<TileObject>[][] tilesOfLabyrinth; // Todo: rename
+    public List<TileObject>[][] stackedLabyrinthWithTiles;
 
     private LabyrinthControllerImpl controller;
 
@@ -25,24 +25,24 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
     int rows = labyrinth.length;
     int columns = labyrinth[0].length;
 
-    List<TileObject>[][] stackedLabyrinth = new List[rows][columns];
-    this.tilesOfLabyrinth = stackedLabyrinth;
+    this.stackedLabyrinthWithTiles = new List[rows][columns];
 
     // Initialize each element of the array with an empty list
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            stackedLabyrinth[i][j] = new ArrayList<>();
+            this.stackedLabyrinthWithTiles[i][j] = new ArrayList<>();
 
             // TODO get more than one Image for Animation
             int imageOffset = labyrinth[i][j];
 
             if (isTileSolid(imageOffset)) {
-                stackedLabyrinth[i][j].add(new WallTile(imageOffset, this.controller));
+                this.stackedLabyrinthWithTiles[i][j].add(new WallTile(imageOffset, this.controller));
             } else {
-                stackedLabyrinth[i][j].add(new GroundTile(imageOffset, this.controller));
+                this.stackedLabyrinthWithTiles[i][j].add(new GroundTile(imageOffset, this.controller));
             }
         }
     }
+
     // Add more special tiles
     addBlocksAndBoostersToLabyrinth();
 
@@ -57,9 +57,9 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
     private void setBorders(int offsetTop, int offsetRight, int offsetBottom, int offsetLeft) {
         this.minY = offsetTop;
 //        this.maxX = labyrinth[0].length - offsetRight - offsetLeft;
-        this.maxX = tilesOfLabyrinth[0].length - offsetRight - offsetLeft;
+        this.maxX = stackedLabyrinthWithTiles[0].length - offsetRight - offsetLeft;
 //        this.maxY = labyrinth.length - offsetBottom - offsetTop;
-        this.maxY = tilesOfLabyrinth.length - offsetBottom - offsetTop;
+        this.maxY = stackedLabyrinthWithTiles.length - offsetBottom - offsetTop;
         this.minX = offsetLeft;
     }
 
@@ -113,7 +113,7 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
 
     private boolean addTileObjectToStackedLabyrinth(int x, int y, TileObject tileObject) {
         if (!isSolid(x, y)) {
-            this.tilesOfLabyrinth[y][x].add(tileObject);
+            this.stackedLabyrinthWithTiles[y][x].add(tileObject);
             return true;
         }
         return false;
@@ -127,7 +127,7 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
      * @return True if the tile is solid, false otherwise.
      */
     public boolean isSolid(int x, int y) {
-        List<TileObject> tileObjects = this.tilesOfLabyrinth[y][x];
+        List<TileObject> tileObjects = this.stackedLabyrinthWithTiles[y][x];
         for (TileObject tileObject : tileObjects) {
             if (tileObject.isSolid()) {
                 return true;
