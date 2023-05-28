@@ -17,21 +17,7 @@ import static java.lang.Math.round;
 public class LabyrinthControllerImpl implements LabyrinthController {
     public static final Logger logger = Logger.getLogger(DynaMJBApplication.class.getName());
 
-    private int[][] labyrinth = { // Sample labyrinth data
-            {32, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 34},
-            {35, 2, 1, 0, 2, 1, 3, 2, 2, 2, 2, 0, 0, 2, 36},
-            {35, 0, 44, 2, 44, 5, 44, 2, 44, 3, 44, 4, 44, 5, 36},
-            {37, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 38},
-            {39, 2, 44, 2, 44, 2, 44, 2, 44, 0, 44, 2, 44, 2, 40},
-            {35, 2, 0, 0, 2, 2, 2, 2, 5, 2, 5, 3, 2, 2, 36},
-            {35, 2, 44, 2, 44, 2, 44, 2, 44, 2, 44, 2, 44, 0, 36},
-            {35, 2, 0, 2, 3, 2, 2, 4, 4, 2, 2, 2, 2, 1, 36},
-            {35, 2, 44, 2, 44, 2, 44, 5, 44, 2, 44, 3, 44, 2, 36},
-            {37, 2, 4, 2, 2, 5, 1, 5, 1, 3, 2, 2, 1, 2, 38},
-            {39, 2, 44, 2, 44, 0, 44, 0, 44, 2, 44, 0, 44, 0, 40},
-            {35, 0, 1, 5, 5, 2, 1, 3, 3, 5, 1, 3, 3, 2, 36},
-            {43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43},
-    };
+    private int[][] labyrinth = new LabyrinthGrid().grid;
 
     // StackedLabyrinth Borders for Clipping
     private int minX;
@@ -59,7 +45,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         this.players = createPlayers();
         this.controlledPlayers = createPlayerControllers(this.players);
 
-        this.stackedLabyrinth = createLabyrinth(labyrinth, solidTiles);
+        this.stackedLabyrinth = createLabyrinth(this.labyrinth, solidTiles);
         addBlocksAndBoostersToLabyrinth();
     }
 
@@ -79,7 +65,6 @@ public class LabyrinthControllerImpl implements LabyrinthController {
      * Do all updates of players (move in labyrinth, collision with flames, boost velocity
      */
     public void updatePlayers() {
-//        for (Player player : players) {
         for (PlayerController controlledPlayer : this.controlledPlayers) {
 
             Player player = controlledPlayer.getPlayer();
