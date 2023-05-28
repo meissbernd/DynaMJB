@@ -19,13 +19,6 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
     private int[][] labyrinth = new LabyrinthGrid().grid;
 
-//    // StackedLabyrinth Borders for Clipping
-//    private int minX;
-//    private int maxX;
-//    private int minY;
-//    private int maxY;
-
-    // Offsets of solid Tiles
     private int[] solidTiles = {44};
     static String tilePath = Objects.requireNonNull(MainPane.class.getResource(LABYRINTH_IMAGE)).toString();
     private ImagePattern[] labyrinthSet;
@@ -46,6 +39,12 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
         this.stackedLabyrinth = new LabyrinthStacked(this.labyrinth, solidTiles, this);
         this.stackedLabyrinthTiles = this.stackedLabyrinth.stackedLabyrinthWithTiles;
+
+        TileObject aaa= this.stackedLabyrinth.getTileAtGridPosition(2,2);
+        System.out.println("0,0: " + this.stackedLabyrinth.getTileAtGridPosition(0,0).isSolid());
+        System.out.println("1,1: " + this.stackedLabyrinth.getTileAtGridPosition(1,1).toString());
+        System.out.println("2,2: " + this.stackedLabyrinth.getTileAtGridPosition(2,2).toString());
+        System.out.println("12,14: " + this.stackedLabyrinth.getTileAtGridPosition(12,14).toString());
     }
 
     public PlayerController getControllerOfPlayer1() {

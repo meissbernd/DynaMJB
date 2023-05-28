@@ -50,6 +50,10 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
     setBorders(1, 1, 1, 1);
 }
 
+    public TileObject getTileAtGridPosition(int x_grid, int y_grid) {
+        return this.stackedLabyrinthWithTiles[x_grid][y_grid].get(0);
+    }
+
     public boolean inLabyrinth(int x_grid, int y_grid) {
         return ((x_grid >= minX) && (x_grid <= maxX) && (y_grid >= minY) && (y_grid <= maxY));
     }
@@ -126,8 +130,8 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
      * @param y The y-coordinate of the tile.
      * @return True if the tile is solid, false otherwise.
      */
-    public boolean isSolid(int x, int y) {
-        List<TileObject> tileObjects = this.stackedLabyrinthWithTiles[y][x];
+    public boolean isSolid(int x_grid, int y_grid) {
+        List<TileObject> tileObjects = this.stackedLabyrinthWithTiles[y_grid][x_grid];
         for (TileObject tileObject : tileObjects) {
             if (tileObject.isSolid()) {
                 return true;
