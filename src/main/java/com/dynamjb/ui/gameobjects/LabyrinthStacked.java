@@ -7,11 +7,17 @@ import java.util.List;
 
 public class LabyrinthStacked {
 
-    public List<TileObject>[][] tilesOfLabyrinth;
+    public List<TileObject>[][] tilesOfLabyrinth; // Todo: rename
 
     private LabyrinthControllerImpl controller;
 
     private int[] solidTiles = {44};
+
+    // StackedLabyrinth Borders for Clipping
+    private int minX;
+    private int maxX;
+    private int minY;
+    private int maxY;
 
 public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthControllerImpl controller){
     this.controller = controller;
@@ -39,7 +45,23 @@ public LabyrinthStacked(int[][] labyrinth, int[] solidTiles, LabyrinthController
     }
     // Add more special tiles
     addBlocksAndBoostersToLabyrinth();
+
+    // Set Borders for FameClipping
+    setBorders(1, 1, 1, 1);
 }
+
+    public boolean inLabyrinth(int x_grid, int y_grid) {
+        return ((x_grid >= minX) && (x_grid <= maxX) && (y_grid >= minY) && (y_grid <= maxY));
+    }
+
+    private void setBorders(int offsetTop, int offsetRight, int offsetBottom, int offsetLeft) {
+        this.minY = offsetTop;
+//        this.maxX = labyrinth[0].length - offsetRight - offsetLeft;
+        this.maxX = tilesOfLabyrinth[0].length - offsetRight - offsetLeft;
+//        this.maxY = labyrinth.length - offsetBottom - offsetTop;
+        this.maxY = tilesOfLabyrinth.length - offsetBottom - offsetTop;
+        this.minX = offsetLeft;
+    }
 
     private void addBlocksAndBoostersToLabyrinth() {
         setBlock(4, 3);

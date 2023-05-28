@@ -52,7 +52,7 @@ public class MainViewModel implements LabyrinthObserver {
         this.controller = labyrinthController;
 
         this.labyrinthSet = controller.getLabyrinthSet();
-        this.stackedLabyrinth = this.controller.getStackedLabyrinth();
+        this.stackedLabyrinth = this.controller.getStackedLabyrinthTiles();
 
         this.playerSet = controller.getPlayerSet();
         this.players = controller.getPlayers();
@@ -65,7 +65,7 @@ public class MainViewModel implements LabyrinthObserver {
     }
 
     private void updateStackedLabyrinth() {
-        stackedLabyrinth = controller.getStackedLabyrinth();
+        stackedLabyrinth = controller.getStackedLabyrinthTiles();
     }
 
     public ImagePattern[] getPlayerSet() {

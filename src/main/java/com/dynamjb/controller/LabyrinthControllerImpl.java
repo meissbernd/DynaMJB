@@ -19,17 +19,18 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
     private int[][] labyrinth = new LabyrinthGrid().grid;
 
-    // StackedLabyrinth Borders for Clipping
-    private int minX;
-    private int maxX;
-    private int minY;
-    private int maxY;
+//    // StackedLabyrinth Borders for Clipping
+//    private int minX;
+//    private int maxX;
+//    private int minY;
+//    private int maxY;
 
     // Offsets of solid Tiles
     private int[] solidTiles = {44};
     static String tilePath = Objects.requireNonNull(MainPane.class.getResource(LABYRINTH_IMAGE)).toString();
     private ImagePattern[] labyrinthSet;
-    List<TileObject>[][] stackedLabyrinth;
+    List<TileObject>[][] stackedLabyrinthTiles;
+    LabyrinthStacked stackedLabyrinth;
     // Player
     static String playerPath = Objects.requireNonNull(MainPane.class.getResource(PLAYER_IMAGE)).toString();
     private ImagePattern[] playerSet;
@@ -39,14 +40,12 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     public LabyrinthControllerImpl() {
         this.labyrinthSet = loadTileset(tilePath, TILE_SIZE, TILE_SIZE);
         this.playerSet = loadTileset(playerPath, 24, 32);
-        // Set Borders for FameClipping
-        setBorders(1, 1, 1, 1);
 
         this.players = createPlayers();
         this.controlledPlayers = createPlayerControllers(this.players);
 
-        LabyrinthStacked myStackedLabyrinth = new LabyrinthStacked(this.labyrinth, solidTiles, this);
-        this.stackedLabyrinth = myStackedLabyrinth.tilesOfLabyrinth;
+        this.stackedLabyrinth = new LabyrinthStacked(this.labyrinth, solidTiles, this);
+        this.stackedLabyrinthTiles = this.stackedLabyrinth.tilesOfLabyrinth;
     }
 
     public PlayerController getControllerOfPlayer1() {
@@ -99,21 +98,21 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         }
 
     }
-    double adjustVertical(double vertical, double velocity){
-        if(vertical-(int)vertical < 0.5){
-            if((vertical+velocity)-(int)(vertical+velocity) < 0.5){
-                return vertical+velocity;
-            } else {
-                return (int)(vertical+velocity);
-            }
-        }else {
-            if((vertical+velocity)-(int)(vertical+velocity) >= 0.5){
-                return vertical+velocity;
-            } else {
-                return (int)(vertical+velocity);
-            }
-        }
-    }
+//    double adjustVertical(double vertical, double velocity){
+//        if(vertical-(int)vertical < 0.5){
+//            if((vertical+velocity)-(int)(vertical+velocity) < 0.5){
+//                return vertical+velocity;
+//            } else {
+//                return (int)(vertical+velocity);
+//            }
+//        }else {
+//            if((vertical+velocity)-(int)(vertical+velocity) >= 0.5){
+//                return vertical+velocity;
+//            } else {
+//                return (int)(vertical+velocity);
+//            }
+//        }
+//    }
 
     private List<Player> createPlayers() {
         ArrayList<Player> players = new ArrayList<>();
@@ -132,12 +131,6 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         }
         return controlledPlayers;
     }
-
-
-    private boolean inLabyrinth(int x, int y) {
-        return ((x >= minX) && (x <= maxX) && (y >= minY) && (y <= maxY));
-    }
-
 
     protected boolean setFlame(long playerId, int x, int y, int[] animationPattern) {
         Flame flame = new Flame(playerId, animationPattern, this);
@@ -163,7 +156,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         }
 
         for (int dx = 1; dx <= flameLength; dx++) {
-            if (inLabyrinth(x + dx, y)) {
+            if (stackedLabyrinth.inLabyrinth(x + dx, y)) {
                 if ((dx == flameLength)) {
                     setFlame(playerId, x + dx, y, new int[]{69, 70, 71, 72, 71, 70, 73});
                 } else {
@@ -177,7 +170,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
             }
         }
         for (int dx = 1; dx <= flameLength; dx++) {
-            if (inLabyrinth(x - dx, y)) {
+            if (stackedLabyrinth.inLabyrinth(x - dx, y)) {
                 if (dx == flameLength) {
                     setFlame(playerId, x - dx, y, new int[]{53, 54, 55, 56, 55, 54, 57});
                 } else {
@@ -192,7 +185,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
 
         }
         for (int dy = 1; dy <= flameLength; dy++) {
-            if (inLabyrinth(x, y - dy)) {
+            if (stackedLabyrinth.inLabyrinth(x, y - dy)) {
                 if (dy == flameLength) {
                     setFlame(playerId, x, y - dy, new int[]{64, 65, 66, 67, 66, 64, 68});
 
@@ -206,7 +199,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
             }
         }
         for (int dy = 1; dy <= flameLength; dy++) {
-            if (inLabyrinth(x, y + dy)) {
+            if (stackedLabyrinth.inLabyrinth(x, y + dy)) {
                 if (dy == flameLength) {
                     setFlame(playerId, x, y + dy, new int[]{96, 97, 98, 99, 98, 97, 100});
 
@@ -223,8 +216,8 @@ public class LabyrinthControllerImpl implements LabyrinthController {
     }
 
     @Override
-    public List<TileObject>[][] getStackedLabyrinth() {
-        return stackedLabyrinth;
+    public List<TileObject>[][] getStackedLabyrinthTiles() {
+        return stackedLabyrinthTiles;
     }
 
     @Override
@@ -246,82 +239,34 @@ public class LabyrinthControllerImpl implements LabyrinthController {
      */
     private boolean addTileObjectToStackedLabyrinth(int x, int y, TileObject tileObject) {
         if (!isSolid(x, y)) {
-            this.stackedLabyrinth[y][x].add(tileObject);
+            this.stackedLabyrinthTiles[y][x].add(tileObject);
             return true;
         }
         return false;
     }
 
-    private List<TileObject>[][] createLabyrinth(int[][] labyrinth, int[] solidTiles) {
-        int rows = labyrinth.length;
-        int columns = labyrinth[0].length;
-
-        List<TileObject>[][] stackedLabyrinth = new List[rows][columns];
-
-        // Initialize each element of the array with an empty list
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                stackedLabyrinth[i][j] = new ArrayList<>();
-
-                // TODO get more than one Image for Animation
-//                int[] animationPattern = {labyrinth[i][j]};
-                int imageOffset = labyrinth[i][j];
-
-                if (isTileSolid(imageOffset)) {
-                    stackedLabyrinth[i][j].add(new WallTile(imageOffset, this));
-
-                } else {
-                    stackedLabyrinth[i][j].add(new GroundTile(imageOffset, this));
-                }
-            }
-        }
-        return stackedLabyrinth;
-    }
-
-    /**
-     * Checks tile if solid for Labyrinth creation
-     *
-     * @param imageOffset the image offset of the tile
-     * @return true if tile must be solid
-     */
-    private boolean isTileSolid(int imageOffset) {
-        for (int solidTile : solidTiles) {
-            if (imageOffset == solidTile) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void setBorders(int offsetTop, int offsetRight, int offsetBottom, int offsetLeft) {
-        this.minY = offsetTop;
-        this.maxX = labyrinth[0].length - offsetRight - offsetLeft;
-        this.maxY = labyrinth.length - offsetBottom - offsetTop;
-        this.minX = offsetLeft;
-    }
-
-    private TileObject getTileObjectById(long tileObjectId) {
-        int rows = labyrinth.length;
-        int columns = labyrinth[0].length;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                List<TileObject> tileObjects = stackedLabyrinth[i][j];
-                for (TileObject tileObject : tileObjects) {
-                    if (tileObject.getId() == tileObjectId) {
-                        return tileObject;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+//    private TileObject getTileObjectById(long tileObjectId) {
+//        int rows = labyrinth.length;
+//        int columns = labyrinth[0].length;
+//        for (int i = 0; i < rows; i++) {
+//            for (int j = 0; j < columns; j++) {
+//                List<TileObject> tileObjects = stackedLabyrinthTiles[i][j];
+//                for (TileObject tileObject : tileObjects) {
+//                    if (tileObject.getId() == tileObjectId) {
+//                        return tileObject;
+//                    }
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     private boolean deleteTileObject(long tileObjectId) {
         int rows = labyrinth.length;
         int columns = labyrinth[0].length;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                List<TileObject> tileObjects = stackedLabyrinth[i][j];
+                List<TileObject> tileObjects = stackedLabyrinthTiles[i][j];
                 for (TileObject tileObject : tileObjects) {
                     if (tileObject.getId() == tileObjectId) {
                         tileObjects.remove(tileObject);
@@ -338,7 +283,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         int columns = labyrinth[0].length;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                List<TileObject> tileObjects = stackedLabyrinth[i][j];
+                List<TileObject> tileObjects = stackedLabyrinthTiles[i][j];
                 for (TileObject tileObject : tileObjects) {
                     if (tileObject.getId() == tileObjectId) {
                         tileObjects.remove(tileObject);
@@ -391,24 +336,24 @@ public class LabyrinthControllerImpl implements LabyrinthController {
         return this.players;
     }
 
-    public void setPlayerPos(List<Player> players, double x, double y, long id) {
-        for (Player player : players) {
-            if (player.getPlayerId() == id) {
-                player.setXPosition(x);
-                player.setYPosition(y);
-                break;
-            }
-        }
-    }
+//    public void setPlayerPos(List<Player> players, double x, double y, long id) {
+//        for (Player player : players) {
+//            if (player.getPlayerId() == id) {
+//                player.setXPosition(x);
+//                player.setYPosition(y);
+//                break;
+//            }
+//        }
+//    }
 
-    public void setPlayerMoveState(List<Player> players, int[] moveState, long id) {
-        for (Player player : players) {
-            if (player.getPlayerId() == id) {
-                player.setPlayerMoveState(moveState);
-                break;
-            }
-        }
-    }
+//    public void setPlayerMoveState(List<Player> players, int[] moveState, long id) {
+//        for (Player player : players) {
+//            if (player.getPlayerId() == id) {
+//                player.setPlayerMoveState(moveState);
+//                break;
+//            }
+//        }
+//    }
 
     /**
      * Checks if a tile at the coordinates (x, y) is destrutible and start the animation .
@@ -417,7 +362,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
      * @param y The y-coordinate of the tile.
      */
     public void startDestruction(int x, int y) {
-        List<TileObject> tileObjects = stackedLabyrinth[y][x];
+        List<TileObject> tileObjects = stackedLabyrinthTiles[y][x];
 
         for (TileObject tileObject : tileObjects) {
             if (tileObject.isDestructible()) {
@@ -434,7 +379,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
      * @return True if the tile is solid, false otherwise.
      */
     public boolean isSolid(int x, int y) {
-        List<TileObject> tileObjects = stackedLabyrinth[y][x];
+        List<TileObject> tileObjects = stackedLabyrinthTiles[y][x];
 
         for (TileObject tileObject : tileObjects) {
             if (tileObject.isSolid()) {
@@ -451,7 +396,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
      * @return {@code false} if a tile object of the specified type is found, {@code false} otherwise.
      */
     public boolean isTileObject(int x, int y, Class<? extends TileObject> tileType) {
-        List<TileObject> tileObjects = stackedLabyrinth[y][x];
+        List<TileObject> tileObjects = stackedLabyrinthTiles[y][x];
 
         for (TileObject tileObject : tileObjects) {
             if (tileType.isInstance(tileObject)) {
@@ -473,7 +418,7 @@ public class LabyrinthControllerImpl implements LabyrinthController {
      * @return The ID of the explosive object, or -1 if no explosive object is present.
      */
     public long isExplosive(int x, int y) {
-        List<TileObject> tileObjects = stackedLabyrinth[y][x];
+        List<TileObject> tileObjects = stackedLabyrinthTiles[y][x];
         for (TileObject tileObject : tileObjects) {
             if (tileObject.isExplosive()) {
                 return tileObject.getId();
